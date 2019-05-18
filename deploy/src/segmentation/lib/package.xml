@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>bonnetal_segmentation_lib</name>
+  <version>0.1.0</version>
+  <description>Core library for Segmentation using Bonnetal</description>
+  <maintainer email="amilioto@uni-bonn.de">Andres Milioto</maintainer>
+  <author email="amilioto@uni-bonn.de">Andres Milioto</author>
+  <license>MIT</license>
+
+  <!-- Dependencies -->
+  <buildtool_depend>catkin</buildtool_depend>
+  <depend>bonnetal_external</depend>
+  <depend>opencv</depend>
+  <depend>yaml</depend>
+
+</package>

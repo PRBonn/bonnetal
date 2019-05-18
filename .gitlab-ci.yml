@@ -1,0 +1,12 @@
+image: tano297/bonnetal:base
+
+stages:
+  - build
+
+build:
+  stage: build
+  script:
+  - cp -r /builds/ipb-team/ipb-tools/bonnetal /bonnetal && ./test.sh
+
+  tags:
+  - docker

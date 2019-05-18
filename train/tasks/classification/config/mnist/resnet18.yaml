@@ -1,0 +1,66 @@
+# training parameters
+train:
+  max_epochs: 300
+  max_lr: 0.1            # sgd learning rate max
+  min_lr: 0.001          # warmup initial learning rate
+  up_epochs: 1           # warmup during first XX epochs (can be float)
+  down_epochs:  20       # warmdown during second XX epochs  (can be float)
+  max_momentum: 0.9      # sgd momentum max when lr is mim
+  min_momentum: 0.85     # sgd momentum min when lr is max
+  final_decay: 0.99      # learning rate decay per epoch after initial cycle (from min lr)
+  w_decay: 0.001         # weight decay
+  batch_size: 256        # batch size
+  report_batch: 1        # every x batches, report loss
+  save_summary: False    # Summary of weight histograms for tensorboard
+  avg_N: 3               # average the N best models
+
+# backbone parameters
+backbone:
+  name: "resnet"
+  dropout: 0.03
+  bn_d: 0.1
+  OS: 32 # output stride
+  train: True # train backbone?
+  extra:
+    resnet: "resnet18"
+    
+# classification head parameters
+head:
+  name: "classification"
+  dropout: 0.03
+
+# dataset (to find parser)
+dataset:
+  name: "mnist"
+  location: "/cache/datasets/mnist"
+  workers: 4 # number of threads to get data
+  img_means: #rgb
+    - 0.5
+  img_stds: #rgb
+    - 0.5
+  img_prop:
+    width: 32
+    height: 32
+    depth: 1
+  labels:
+    0: 'zero'
+    1: 'one'
+    2: 'two'
+    3: 'three'
+    4: 'four'
+    5: 'five'
+    6: 'six'
+    7: 'seven'
+    8: 'eight'
+    9: 'nine'
+  labels_w:
+    0: 1.0
+    1: 1.0
+    2: 1.0
+    3: 1.0
+    4: 1.0
+    5: 1.0
+    6: 1.0
+    7: 1.0
+    8: 1.0
+    9: 1.0

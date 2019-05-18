@@ -1,0 +1,15 @@
+# Copyright (c) 2019 Andres Milioto, Cyrill Stachniss, University of Bonn.
+#
+#  This file is part of Bonnetal, and covered by the provided LICENSE file.
+#
+
+# CNN stuff
+model_path: "/cache/models/imagenet/infer"
+verbose: true
+backend: "tensorrt" # tf (pytorch, cpu or gpu mode) or tensorrt (TensorRT nvidia gpu)
+
+# ROS stuff
+# inputs
+input_image: /usb_cam/image_raw
+# outputs
+output_msg: /bonnetal/classification/output

@@ -1,0 +1,128 @@
+# training parameters
+train:
+  loss: "xentropy"       # must be either xentropy or iou
+  max_epochs: 300
+  max_lr: 0.05           # sgd learning rate max
+  min_lr: 0.01           # warmup initial learning rate
+  up_epochs: 1           # warmup during first XX epochs (can be float)
+  down_epochs:  60       # warmdown during second XX epochs  (can be float)
+  max_momentum: 0.9      # sgd momentum max when lr is mim
+  min_momentum: 0.85     # sgd momentum min when lr is max
+  final_decay: 0.99      # learning rate decay per epoch after initial cycle (from min lr)
+  w_decay: 0.0005        # weight decay
+  batch_size: 12         # batch size
+  report_batch: 1        # every x batches, report loss
+  report_epoch: 1        # every x epochs, report validation set
+  save_summary: False    # Summary of weight histograms for tensorboard
+  save_imgs: True        # False doesn't save anything, True saves some 
+                         # sample images (one per batch of the last calculated batch)
+                         # in log folder
+  avg_N: 3               # average the N best models
+  crop_prop:
+    height: 512
+    width: 512
+
+# backbone parameters
+backbone:
+  name: "darknet"
+  dropout: 0.02
+  bn_d: 0.05
+  OS: 8 # output stride
+  train: True # train backbone?
+  extra:
+    darknet: "darknet53"
+
+decoder:
+  name: "aspp_progressive"
+  dropout: 0.02
+  bn_d: 0.05
+  train: True # train decoder?
+  extra:
+    aspp_channels: 256
+    last_channels: 64
+
+# classification head parameters
+head:
+  name: "segmentation"
+  dropout: 0.1
+
+# dataset (to find parser)
+dataset:
+  name: "cityscapes"
+  location: "/cache/datasets/cityscapes/dataset/"
+  workers: 3  # number of threads to get data
+  img_means: #rgb
+    - 0.2868
+    - 0.3251
+    - 0.2838
+  img_stds: #rgb
+    - 0.1869
+    - 0.1901
+    - 0.1872
+  img_prop:
+    width: 1024
+    height: 512
+    depth: 3
+  labels:
+    0: 'road'
+    1: 'sidewalk'
+    2: 'building'
+    3: 'wall'
+    4: 'fence'
+    5: 'pole'
+    6: 'trafficlight'
+    7: 'trafficsign'
+    8: 'vegetation'
+    9: 'terrain'
+    10: 'sky'
+    11: 'person'
+    12: 'rider'
+    13: 'car'
+    14: 'truck'
+    15: 'bus'
+    16: 'train'
+    17: 'motorcycle'
+    18: 'bicycle'
+    19: 'crap'
+  labels_w:
+    0: 3.36258268
+    1: 14.03326797
+    2: 4.98945665
+    3: 39.25167084
+    4: 36.5057373
+    5: 32.89967728
+    6: 46.27554703
+    7: 40.67154694
+    8: 6.70474911
+    9: 33.55268478
+    10: 18.51486206
+    11: 32.99533463
+    12: 47.68305206
+    13: 12.69611359
+    14: 45.20449448
+    15: 45.78203583
+    16: 45.8253479
+    17: 48.40744781
+    18: 42.75931931
+    19: 0.0 
+  color_map: # bgr
+    0: [128,64,128]
+    1: [232,35,244]
+    2: [70,70,70]
+    3: [156,102,102]
+    4: [153,153,190]
+    5: [153,153,153]
+    6: [30,170,250]
+    7: [0,220,220]
+    8: [35,142,107]
+    9: [152,251,152]
+    10: [180,130,70]
+    11: [60,20,220]
+    12: [0,0,255]
+    13: [142,0,0]
+    14: [70,0,0]
+    15: [100,60,0]
+    16: [100,80,0]
+    17: [230,0,0]
+    18: [32,11,119]
+    19: [0,0,0]

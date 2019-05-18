@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>bonnetal_classification_standalone</name>
+  <version>0.1.0</version>
+  <description>Standalone Apps for Classification using Bonnetal</description>
+  <maintainer email="amilioto@uni-bonn.de">Andres Milioto</maintainer>
+  <author email="amilioto@uni-bonn.de">Andres Milioto</author>
+  <license>MIT</license>
+
+  <!-- Dependencies -->
+  <buildtool_depend>catkin</buildtool_depend>
+  <depend>bonnetal_classification_lib</depend>
+  <depend>boost</depend>
+
+</package>

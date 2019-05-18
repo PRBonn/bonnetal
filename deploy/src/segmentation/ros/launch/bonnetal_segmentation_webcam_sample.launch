@@ -1,0 +1,18 @@
+<launch>
+  <!-- Launch webcam -->
+  <node name="usb_cam" pkg="usb_cam" type="usb_cam_node" output="screen">
+    <param name="video_device" value="/dev/video0" />
+    <param name="image_width" value="640" />
+    <param name="image_height" value="480" />
+    <param name="pixel_format" value="yuyv" />
+    <param name="camera_frame_id" value="usb_cam" />
+    <param name="framerate" value="30" />
+    <param name="io_method" value="mmap"/>
+  </node>
+
+  <!-- Launch ROS Node for net handler with all the desired parameters-->
+  <node pkg="bonnetal_segmentation_ros" type="bonnetal_segmentation_node" name="bonnetal_segmentation_node" output="screen">
+    <!-- Config -->
+    <rosparam command="load" file="$(find bonnetal_segmentation_ros)/config/cfg.yaml" />
+  </node>
+</launch>

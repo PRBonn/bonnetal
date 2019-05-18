@@ -1,0 +1,14 @@
+<!-- 
+ * Copyright (c) 2019 Andres Milioto, Cyrill Stachniss, University of Bonn.
+ *
+ * This file is part of Bonnetal, and covered by the provided LICENSE file.
+ *
+ */-->
+
+<launch>
+  <!-- Launch ROS Node for net handler with all the desired parameters-->
+  <node pkg="bonnetal_segmentation_ros" type="bonnetal_segmentation_node" name="bonnetal_segmentation_node" output="screen" launch-prefix="gdb --args">
+    <!-- Config -->
+    <rosparam command="load" file="$(find bonnetal_segmentation_ros)/config/cfg.yaml" />
+  </node>
+</launch>

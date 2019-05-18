@@ -1,0 +1,14 @@
+<!-- 
+ * Copyright (c) 2019 Andres Milioto, Cyrill Stachniss, University of Bonn.
+ *
+ * This file is part of Bonnetal, and covered by the provided LICENSE file.
+ *
+ */-->
+ 
+<launch>
+  <!-- Launch ROS Node for net handler with all the desired parameters-->
+  <node pkg="bonnetal_classification_ros" type="bonnetal_classification_node" name="bonnetal_classification_node" output="screen">
+    <!-- Config -->
+    <rosparam command="load" file="$(find bonnetal_classification_ros)/config/cfg.yaml" />
+  </node>
+</launch>

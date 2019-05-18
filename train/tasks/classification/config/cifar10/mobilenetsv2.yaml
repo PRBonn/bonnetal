@@ -1,0 +1,71 @@
+# training parameters
+train:
+  max_epochs: 300
+  max_lr: 0.9            # sgd learning rate max
+  min_lr: 0.00001        # warmup initial learning rate
+  up_epochs: 3           # warmup during first XX epochs (can be float)
+  down_epochs:  10       # warmdown during second XX epochs  (can be float)
+  max_momentum: 0.9      # sgd momentum max when lr is mim
+  min_momentum: 0.85     # sgd momentum min when lr is max
+  final_decay: 0.95      # learning rate decay per epoch after initial cycle (from min lr)
+  w_decay: 0.00001       # weight decay
+  batch_size: 256        # batch size
+  report_batch: 1        # every x batches, report loss
+  save_summary: False    # Summary of weight histograms for tensorboard
+  avg_N: 3               # average the N best models
+
+# backbone parameters
+backbone:
+  name: "mobilenetv2"
+  dropout: 0.0
+  bn_d: 0.1
+  OS: 32 # output stride
+  train: True # train backbone?
+  extra:
+    width_mult: 0.1
+    shallow_feats: True # get features before the last layer (mn2)
+    
+# classification head parameters
+head:
+  name: "classification"
+  dropout: 0.01
+
+# dataset (to find parser)
+dataset:
+  name: "cifar10"
+  location: "/cache/datasets/cifar10"
+  workers: 4 # number of threads to get data
+  img_means: #rgb
+    - 0.4913
+    - 0.4465
+    - 0.4465
+  img_stds: #rgb
+    - 0.2470
+    - 0.2434
+    - 0.2615
+  img_prop:
+    width: 32
+    height: 32
+    depth: 3
+  labels:
+    0: 'plane'
+    1: 'car'
+    2: 'bird'
+    3: 'cat'
+    4: 'deer'
+    5: 'dog'
+    6: 'frog'
+    7: 'horse'
+    8: 'ship'
+    9: 'truck'
+  labels_w:
+    0: 1.0
+    1: 1.0
+    2: 1.0
+    3: 1.0
+    4: 1.0
+    5: 1.0
+    6: 1.0
+    7: 1.0
+    8: 1.0
+    9: 1.0

@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>bonnetal_external</name>
+  <version>0.1.0</version>
+  <description>External wrapper for finding TensorRT and Pytorch, used in Bonnetal</description>
+  <maintainer email="amilioto@uni-bonn.de">Andres Milioto</maintainer>
+  <author email="amilioto@uni-bonn.de">Andres Milioto</author>
+  <license>MIT</license>
+
+  <!-- Dependencies -->
+  <buildtool_depend>catkin</buildtool_depend>
+
+</package>
