@@ -99,6 +99,7 @@ These are the currently trained models we have:
 - Semantic Segmentation:
   - Persons:
     - [ERFNet - 512px](http://ipb.uni-bonn.de/html/projects/bonnetal/segmentation/persons-erfnet-88.tar.gz) (14ms/img @ VGA res, 6ms/img @ VGA/2 res)
+    - [MobilenetsV2 - 512px](http://ipb.uni-bonn.de/html/projects/bonnetal/segmentation/persons-mobilenetsv2-aspp-88.tar.gz)
   - Cityscapes:
     - [DarkNet21 ASPP](http://ipb.uni-bonn.de/html/projects/bonnetal/segmentation/cityscapes_darknet21_aspp_69.tar.gz)
     - [DarkNet53 ASPP](http://ipb.uni-bonn.de/html/projects/bonnetal/segmentation/cityscapes_darknet53_aspp_74.tar.gz)
