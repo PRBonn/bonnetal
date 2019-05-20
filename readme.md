@@ -207,4 +207,5 @@ queueing tool to share GPU, CPU and Memory resources in a multi-GPU environment.
 ---
 ## Acknowledgements
 
-We thank NVIDIA Corporation for providing a Quadro P6000 GPU partially used to develop this framework.
+This work has partly been supported by the German Research Foundation under Germany's Excellence Strategy, EXC-2070 - 390732324 (PhenoRob).
+We also thank NVIDIA Corporation for providing a Quadro P6000 GPU partially used to develop this framework.
