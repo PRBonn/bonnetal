@@ -156,7 +156,7 @@ The pretrained models with a specific dataset maintain the copyright of such dat
 ---
 ## Citations
 
-If you use our framework for any academic work, please cite the original [paper](https://arxiv.org/abs/1802.08960).
+If you use our framework for any academic work, please cite the original [paper](http://www.ipb.uni-bonn.de/wp-content/papercite-data/pdf/milioto2019icra.pdf).
 
 ```
 @InProceedings{milioto2019icra,
@@ -164,12 +164,22 @@ If you use our framework for any academic work, please cite the original [paper]
   title      = {{Bonnet: An Open-Source Training and Deployment Framework for Semantic Segmentation in Robotics using CNNs}},
   booktitle  = {Proc. of the IEEE Intl. Conf. on Robotics \& Automation (ICRA)},
   year       = 2019,
-  note       = {Accepted for publication},
-  url        = {https://arxiv.org/abs/1802.08960},
   codeurl    = {https://github.com/Photogrammetry-Robotics-Bonn/bonnet},
   videourl   = {https://www.youtube.com/watch?v=tfeFHCq6YJs},
 }
 ```
+
+If you use our Instance Segmentation code, please cite its paper [paper](http://www.ipb.uni-bonn.de/wp-content/papercite-data/pdf/milioto2019icra-fiass.pdf):
+
+```
+@InProceedings{milioto2019icra-fiass,
+author = {A. Milioto and L. Mandtler and C. Stachniss},
+title = {{Fast Instance and Semantic Segmentation Exploiting Local Connectivity, Metric Learning, and One-Shot Detection for Robotics }},
+booktitle = {Proc. of the IEEE Intl. Conf. on Robotics \& Automation (ICRA)},
+year = 2019,
+}
+```
+
 
 Our networks are either built directly on top of, or strongly based on, the following architectures, so if you use them for any academic work, please give a look at their papers and cite them if you think proper:
 
