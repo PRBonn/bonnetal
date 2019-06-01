@@ -41,9 +41,9 @@ RUN pip3 install numpy==1.14.0 \
   PyYAML==5.1
 
 # tensorrt (Deb local)
-RUN wget http://ipb.uni-bonn.de/html/projects/bonnetal/external/nv-tensorrt-repo-ubuntu1804-cuda10.1-trt5.1.2.2-rc-20190227_1-1_amd64.deb && \
-  dpkg -i nv-tensorrt-repo-ubuntu1804-cuda10.1-trt5.1.2.2-rc-20190227_1-1_amd64.deb && \
-  rm nv-tensorrt-repo-ubuntu1804-cuda10.1-trt5.1.2.2-rc-20190227_1-1_amd64.deb && \
+RUN wget http://ipb.uni-bonn.de/html/projects/bonnetal/external/nv-tensorrt-repo-ubuntu1804-cuda10.1-trt5.1.5.0-ga-20190427_1-1_amd64.deb && \
+  dpkg -i nv-tensorrt-repo-ubuntu1804-cuda10.1-trt5.1.5.0-ga-20190427_1-1_amd64.deb && \
+  rm nv-tensorrt-repo-ubuntu1804-cuda10.1-trt5.1.5.0-ga-20190427_1-1_amd64.deb && \
   apt-get update && \
   apt install tensorrt python3-libnvinfer-dev -yqq
 
