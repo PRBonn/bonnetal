@@ -108,7 +108,7 @@ class User():
       self.means = self.means.cuda()
       self.stds = self.stds.cuda()
 
-  def infer(self, bgr_img, verbose=True, color=True):
+  def infer(self, bgr_img, verbose=True, color=True, flip=False):
     # get sizes
     original_h, original_w, original_d = bgr_img.shape
 
@@ -150,6 +150,12 @@ class User():
       start = time.time()
       # infer
       logits = self.model(rgb_tensor)
+
+      if flip:
+        # flip and infer
+        rgb_tensor = rgb_tensor.flip(3)
+        logits += self.model(rgb_tensor).flip(3)
+
       argmax = logits[0].argmax(dim=0).cpu().numpy().astype(np.uint8)
       if self.gpu:
         torch.cuda.synchronize()
@@ -158,7 +164,8 @@ class User():
       # print time
       if verbose:
         print("Time to infer: ", time_to_infer)
-
+        if flip:
+          print("Doing flip-inference")
       # resize to original size
       argmax = cv2.resize(argmax, (original_w, original_h),
                           interpolation=cv2.INTER_NEAREST)
