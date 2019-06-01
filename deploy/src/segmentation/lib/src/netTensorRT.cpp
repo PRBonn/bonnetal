@@ -123,21 +123,7 @@ cv::Mat NetTensorRT::infer(const cv::Mat& image) {
   argmax.forEach<int32_t>([&](int32_t& pixel, const int* position) -> void {
     // "n_classes"dimension array index from pose
     int32_t pix_idx = position[0] * _img_w + position[1];
-
-    // iterate over classes and get argmax
-    float max = ((float*)_buffers[1])[pix_idx];  // first value we get here
-    int32_t argmax = 0;
-
-    for (int32_t class_idx = 1; class_idx < _n_classes; class_idx++) {
-      float item = ((float*)_buffers[1])[class_idx * channel_offset + pix_idx];
-      if (item > max) {
-        max = item;
-        argmax = class_idx;
-      }
-    }
-
-    // put in pixel
-    pixel = argmax;
+    pixel = ((int*)_buffers[1])[pix_idx];
   });
 
   // post process
@@ -183,6 +169,8 @@ int NetTensorRT::getBufferSize(Dims d, DataType t) {
   for (int i = 0; i < d.nbDims; i++) size *= d.d[i];
 
   switch (t) {
+    case DataType::kINT32:
+      return size * 4;
     case DataType::kFLOAT:
       return size * 4;
     case DataType::kHALF:
@@ -336,6 +324,20 @@ void NetTensorRT::generateEngine(const std::string& onnx_path) {
   } else {
     std::cout << "Success picking up ONNX model" << std::endl;
   }
+
+  // make the argmax part now, so that I don't have to copy back big volumes
+  // and waste cpu and time
+  auto pred = network->addTopK(*network->getOutput(0),
+                               nvinfer1::TopKOperation::kMAX, 1, 1);
+  if (pred == nullptr) {
+    throw std::runtime_error("ERROR: could not add argmax layer.");
+  } else {
+    std::cout << "Success adding argmax to trt model" << std::endl;
+  }
+  pred->getOutput(1)->setName("putoelquelee");
+  pred->setOutputType(1, nvinfer1::DataType::kINT32);
+  network->unmarkOutput(*network->getOutput(0));
+  network->markOutput(*pred->getOutput(1));
 
   // put in engine
   // iterate until I find a size that fits

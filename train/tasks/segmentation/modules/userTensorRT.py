@@ -22,7 +22,8 @@ import tensorrt as trt
 import pycuda.autoinit
 import pycuda.driver as cuda
 TRT_LOGGER = trt.Logger(trt.Logger.WARNING)
-#TRT_LOGGER = trt.Logger(trt.Logger.VERBOSE)
+# TRT_LOGGER = trt.Logger(trt.Logger.VERBOSE)
+
 
 class UserTensorRT():
   def __init__(self, path, workspace):
@@ -82,6 +83,14 @@ class UserTensorRT():
         self.model = open(self.model_path, 'rb')
         self.onnxparser.parse(self.model.read())
         print("Successfully ONNX weights from ", self.model_path)
+        # now add the argmax op in gpu
+        self.topk = self.network.add_topk(
+            self.network.get_output(0), trt.TopKOperation.MAX, 1, 1)
+        assert(self.topk != None)
+        self.topk.get_output(1).name = 'out'
+        self.network.unmark_output(self.network.get_output(0))
+        self.network.mark_output(self.topk.get_output(1))
+        print("Successfully added argmax layer")
       except Exception as e:
         print("Couldn't load ONNX network. Error: ", e)
         quit()
@@ -119,7 +128,7 @@ class UserTensorRT():
     # Determine dimensions and create CUDA memory buffers
     # to hold host inputs/outputs.
     self.d_input_size = self.data_h * self.data_w * self.data_d * 4
-    self.d_output_size = self.data_h * self.data_w * self.nclasses * 4
+    self.d_output_size = self.data_h * self.data_w * 4
     # Allocate device memory for inputs and outputs.
     self.d_input = cuda.mem_alloc(self.d_input_size)
     self.d_output = cuda.mem_alloc(self.d_output_size)
@@ -164,7 +173,7 @@ class UserTensorRT():
     # placeholders
     h_input = np.ascontiguousarray(rgb_tensor, dtype=np.float32)
     h_output = np.empty(
-        (self.data_h * self.data_w * self.nclasses), dtype=np.int32, order='C')
+        (self.data_h * self.data_w), dtype=np.int32, order='C')
 
     # infer
     start = time.time()
@@ -179,8 +188,7 @@ class UserTensorRT():
     # Synchronize the stream
     self.stream.synchronize()
 
-    logits = h_output.reshape((self.nclasses, self.data_h, self.data_w))
-    argmax = logits.argmax(axis=0).astype(np.uint8)
+    argmax = h_output.reshape((self.data_h, self.data_w)).astype(np.uint8)
     time_to_infer = time.time() - start
 
     # time
