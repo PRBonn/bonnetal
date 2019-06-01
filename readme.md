@@ -98,12 +98,15 @@ These are the currently trained models we have:
 
 - Semantic Segmentation:
   - Persons:
-    - [ERFNet - 512px](http://ipb.uni-bonn.de/html/projects/bonnetal/segmentation/persons-erfnet-88.tar.gz) (14ms/img @ VGA res, 6ms/img @ VGA/2 res)
-    - [MobilenetsV2 - 512px](http://ipb.uni-bonn.de/html/projects/bonnetal/segmentation/persons-mobilenetsv2-aspp-88.tar.gz)
+    - [ERFNet - 512px](http://ipb.uni-bonn.de/html/projects/bonnetal/segmentation/persons-erfnet-512-88.tar.gz) (14ms/img @ VGA res, 6ms/img @ VGA/2 res)
+    - [MobilenetsV2 - 512px](http://ipb.uni-bonn.de/html/projects/bonnetal/segmentation/persons-mobilenetsv2-aspp-512-88.tar.gz)
   - Cityscapes:
-    - [DarkNet21 ASPP](http://ipb.uni-bonn.de/html/projects/bonnetal/segmentation/cityscapes_darknet21_aspp_69.tar.gz)
-    - [DarkNet53 ASPP](http://ipb.uni-bonn.de/html/projects/bonnetal/segmentation/cityscapes_darknet53_aspp_74.tar.gz)
-    - [MobilenetsV2 ASPP](http://ipb.uni-bonn.de/html/projects/bonnetal/segmentation/cityscapes_mobilenetsv2_aspp_70.tar.gz)
+    - [DarkNet21 ASPP - 512x1024px](http://ipb.uni-bonn.de/html/projects/bonnetal/segmentation/cityscapes_darknet21_aspp_1024_os8_69.tar.gz)
+    - [DarkNet53 ASPP - 512x1024px](http://ipb.uni-bonn.de/html/projects/bonnetal/segmentation/cityscapes_darknet53_aspp_1024_os8_74.tar.gz)
+    - [DarkNet53 ASPP - 1024x2048px](http://ipb.uni-bonn.de/html/projects/bonnetal/segmentation/cityscapes_darknet53_aspp_2048_os8_76.tar.gz)
+    - [MobilenetsV2 ASPP - 512x1024px](http://ipb.uni-bonn.de/html/projects/bonnetal/segmentation/cityscapes_mobilenetsv2_aspp_1024_os8_70.tar.gz)
+    - [ERFNet - 512x1024px](http://ipb.uni-bonn.de/html/projects/bonnetal/segmentation/cityscapes_erfnet_1024_70.tar.gz)
+    - [ERFNet - 1024x2048px](http://ipb.uni-bonn.de/html/projects/bonnetal/segmentation/cityscapes_erfnet_2048_68.tar.gz)
   - Synthia: (cooking)
   - Mapillary: (cooking)
   - Berkeley 100k: (cooking)
@@ -173,10 +176,10 @@ If you use our Instance Segmentation code, please cite its paper [paper](http://
 
 ```
 @InProceedings{milioto2019icra-fiass,
-author = {A. Milioto and L. Mandtler and C. Stachniss},
-title = {{Fast Instance and Semantic Segmentation Exploiting Local Connectivity, Metric Learning, and One-Shot Detection for Robotics }},
-booktitle = {Proc. of the IEEE Intl. Conf. on Robotics \& Automation (ICRA)},
-year = 2019,
+  author     = {A. Milioto and L. Mandtler and C. Stachniss},
+  title      = {{Fast Instance and Semantic Segmentation Exploiting Local Connectivity, Metric Learning, and One-Shot Detection for Robotics }},
+  booktitle  = {Proc. of the IEEE Intl. Conf. on Robotics \& Automation (ICRA)},
+  year       = 2019,
 }
 ```
 
