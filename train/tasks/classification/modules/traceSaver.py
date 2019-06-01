@@ -79,6 +79,8 @@ class TraceSaver():
 
     # CUDA speedup?
     if torch.cuda.is_available():
+      cudnn.fastest = True
+      cudnn.benchmark = True
       self.model = self.model.cuda()
 
     # don't train
