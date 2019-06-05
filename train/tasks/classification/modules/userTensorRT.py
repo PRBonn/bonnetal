@@ -15,18 +15,24 @@ import numpy as np
 from backbones.config import *
 from tasks.classification.modules.head import *
 from tasks.classification.modules.classifier import *
+from common.trtCalibINT8 import EntropyCalibrator
+
 
 import tensorrt as trt
 import pycuda.autoinit
 import pycuda.driver as cuda
-TRT_LOGGER = trt.Logger(trt.Logger.WARNING)
-#TRT_LOGGER = trt.Logger(trt.Logger.VERBOSE)
+TRT_LOGGER = trt.Logger(trt.Logger.VERBOSE)
 
 
 class UserTensorRT():
-  def __init__(self, path, workspace):
+  def __init__(self, path, workspace, calib_dataset=None):
     # parameters
     self.path = path
+    self.calib_dataset = calib_dataset  # must be a list of images
+    if self.calib_dataset is not None:
+      if (not isinstance(self.calib_dataset, list)):
+        print("calibration dataset must be a list of images")
+        quit()
 
     # config from path
     try:
@@ -55,6 +61,16 @@ class UserTensorRT():
     self.stds = np.array(self.stds, dtype=np.float32)
     self.nclasses = self.parser.get_n_classes()
 
+    # Determine dimensions and create CUDA memory buffers
+    # to hold host inputs/outputs.
+    self.d_input_size = self.data_h * self.data_w * self.data_d * 4
+    self.d_output_size = self.nclasses * 4
+    # Allocate device memory for inputs and outputs.
+    self.d_input = cuda.mem_alloc(self.d_input_size)
+    self.d_output = cuda.mem_alloc(self.d_output_size)
+    # Create a stream in which to copy inputs/outputs and run inference.
+    self.stream = cuda.Stream()
+
     # try to deserialize the engine first
     self.engine = None
     self.engine_serialized_path = path + "/model.trt"
@@ -66,13 +82,33 @@ class UserTensorRT():
       print("Could not deserialize engine. Generate instead. Error: ", e)
       self.engine = None
 
+    # make a builder
+    self.builder = trt.Builder(TRT_LOGGER)
+
+    # int 8 calibration?
+    self.do_calib_int8 = False
+    self.do_inference_int8 = False
+    print("Platform has int8 mode: ", self.builder.platform_has_fast_int8)
+    if self.calib_dataset:
+      # If a calibrator list was passed, do the calibrator
+      print("Trying to calibrate int8 from list of images")
+      self.do_calib_int8 = True
+      self.do_inference_int8 = True
+      self.engine = None  # force rebuild of engine
+      self.calib = EntropyCalibrator(model_path=self.path,
+                                     calibration_files=self.calib_dataset,
+                                     batch_size=1,
+                                     h=self.data_h,
+                                     w=self.data_w,
+                                     means=self.means,
+                                     stds=self.stds)
+
     # architecture definition from onnx if no engine is there
     # get weights?
     if self.engine is None:
       try:
         # basic stuff for onnx parser
         self.model_path = path + "/model.onnx"
-        self.builder = trt.Builder(TRT_LOGGER)
         self.network = self.builder.create_network()
         self.onnxparser = trt.OnnxParser(self.network, TRT_LOGGER)
         self.model = open(self.model_path, 'rb')
@@ -87,8 +123,12 @@ class UserTensorRT():
       try:
         self.builder.max_batch_size = 1
         self.builder.max_workspace_size = workspace
-        self.builder.fp16_mode = self.builder.platform_has_fast_fp16
-        print("Platform has fp16 mode: ", self.builder.platform_has_fast_fp16)
+        self.builder.int8_mode = self.do_inference_int8
+        if self.do_inference_int8:
+          self.builder.int8_calibrator = self.calib
+        else:
+          self.builder.fp16_mode = self.builder.platform_has_fast_fp16
+          print("Platform has fp16 mode: ", self.builder.platform_has_fast_fp16)
         print("Calling build_cuda_engine")
         self.engine = self.builder.build_cuda_engine(self.network)
         assert(self.engine is not None)
@@ -111,20 +151,6 @@ class UserTensorRT():
 
     # create execution context
     self.context = self.engine.create_execution_context()
-
-    # Determine dimensions and create CUDA memory buffers
-    # to hold host inputs/outputs.
-    self.d_input_size = self.data_h * self.data_w * self.data_d * 4
-    self.d_output_size = self.nclasses * 4
-    # Allocate device memory for inputs and outputs.
-    self.d_input = cuda.mem_alloc(self.d_input_size)
-    self.d_output = cuda.mem_alloc(self.d_output_size)
-    # Create a stream in which to copy inputs/outputs and run inference.
-    self.stream = cuda.Stream()
-    # try:
-    # except Exception as e:
-    #   print("Coulnd't allocate i/o for tensorrt inference. Error: ", e)
-    #   quit()
 
   def infer(self, bgr_img, topk=1, verbose=True):
     # get sizes

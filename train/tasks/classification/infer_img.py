@@ -51,6 +51,14 @@ if __name__ == '__main__':
       default=1,
       help='Top predictions. Defaults to %(default)s'
   )
+  parser.add_argument(
+      '--calib_images', '-ci',
+      nargs='+',
+      type=str,
+      required=False,
+      default=None,
+      help='Images to calibrate int8 inference. No Default',
+  )
   FLAGS, unparsed = parser.parse_known_args()
 
   # print summary of what we will do
@@ -61,10 +69,14 @@ if __name__ == '__main__':
   print("backend", FLAGS.backend)
   print("workspace", FLAGS.workspace)
   print("topk", FLAGS.topk)
+  print("INT8 Calibration Images", FLAGS.calib_images)
   print("----------\n")
   print("Commit hash: ", str(
       subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD']).strip()))
   print("----------\n")
+
+  if(FLAGS.calib_images is not None and not isinstance(FLAGS.calib_images, list)):
+    FLAGS.calib_images = [FLAGS.calib_images]
 
   # does model folder exist?
   if FLAGS.path is not None:
@@ -84,7 +96,7 @@ if __name__ == '__main__':
   if FLAGS.backend == "tensorrt":
     # import and use tensorRT
     from tasks.classification.modules.userTensorRT import UserTensorRT
-    user = UserTensorRT(FLAGS.path, FLAGS.workspace)
+    user = UserTensorRT(FLAGS.path, FLAGS.workspace, FLAGS.calib_images)
   elif FLAGS.backend == "caffe2":
     # import and use caffe2
     from tasks.classification.modules.userCaffe2 import UserCaffe2
