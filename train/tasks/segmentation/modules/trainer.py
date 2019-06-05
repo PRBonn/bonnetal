@@ -134,6 +134,7 @@ class Trainer():
     # GPU?
     self.gpu = False
     self.multi_gpu = False
+    self.n_gpus = 0
     self.model_single = self.model
     self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print("Training in device: ", self.device)
@@ -147,6 +148,7 @@ class Trainer():
       self.model = convert_model(self.model).cuda()  # sync batchnorm
       self.model_single = self.model.module  # single model to get weight names
       self.multi_gpu = True
+      self.n_gpus = torch.cuda.device_count()
 
     # loss
     if "loss" in self.CFG["train"].keys() and self.CFG["train"]["loss"] == "xentropy":
@@ -155,6 +157,9 @@ class Trainer():
       self.criterion = mIoULoss(weight=self.loss_w).to(self.device)
     else:
       raise Exception('Loss not defined in config file')
+    # loss as dataparallel too (more images in batch)
+    if self.n_gpus > 1:
+      self.criterion = nn.DataParallel(self.criterion).cuda()  # spread in gpus
 
     # optimizer
     train_dicts = [{'params': self.model_single.head.parameters()}]
@@ -473,7 +478,17 @@ class Trainer():
       output = model(input)
       loss = criterion(output, target)
 
+      # compute gradient and do SGD step
+      optimizer.zero_grad()
+      if self.n_gpus > 1:
+        idx = torch.ones(self.n_gpus).cuda()
+        loss.backward(idx)
+      else:
+        loss.backward()
+      optimizer.step()
+
       # measure accuracy and record loss
+      loss = loss.mean()
       with torch.no_grad():
         evaluator.reset()
         evaluator.addBatch(output.argmax(dim=1), target)
@@ -482,11 +497,6 @@ class Trainer():
       losses.update(loss.item(), input.size(0))
       acc.update(accuracy.item(), input.size(0))
       iou.update(jaccard.item(), input.size(0))
-
-      # compute gradient and do SGD step
-      optimizer.zero_grad()
-      loss.backward()
-      optimizer.step()
 
       # measure elapsed time
       batch_time.update(time.time() - end)
@@ -557,6 +567,7 @@ class Trainer():
 
         # measure accuracy and record loss
         evaluator.addBatch(output.argmax(dim=1), target)
+        loss = loss.mean()
         losses.update(loss.item(), input.size(0))
 
         # measure elapsed time
