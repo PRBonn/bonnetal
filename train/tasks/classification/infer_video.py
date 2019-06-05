@@ -7,7 +7,7 @@ import os
 import cv2
 import __init__ as booger
 from queue import Queue
-from threading import Thread
+from threading import Thread, Event
 import numpy as np
 
 # choice of backends implemented
@@ -21,20 +21,30 @@ class CaptureRunner(Thread):
     self.cap = cap
     self.blocking = blocking
     self.stopping = False
+    self._stop_event = Event()
 
   def run(self):
     self.stopping = False
-    while not self.stopping:
-      ret, cv_img = cap.read()
+    while not self._stop_event.is_set():
+      if self.cap.isOpened():
+        ret, cv_img = self.cap.read()
+      else:
+        self.stop()
       if ret:
         if not self.blocking and not self.queue.full():
           self.queue.put_nowait(cv_img)
         elif self.blocking:
-          self.queue.put(cv_img, block=self.blocking)
+          while not self._stop_event.is_set():
+            try:
+              self.queue.put(cv_img, block=self.blocking, timeout=0.1)
+              break
+            except:
+              pass
 
   def stop(self):
-    self.stopping = True
-    self.queue.get()
+    self._stop_event.set()
+    while(not self.queue.empty()):
+      self.queue.get()
 
 
 if __name__ == '__main__':
@@ -157,14 +167,18 @@ if __name__ == '__main__':
 
   # infer images
   idx = 0
-  while cap.isOpened():
+  while not worker.stopping:
+    # get image
+    try:
+      cv_img = queue.get(timeout=1)
+    except:
+      print("No more frames")
+      break
+
     # order
     if(FLAGS.verbose):
       print("*" * 80)
       print("New frame ", idx)
-
-    # get image
-    cv_img = queue.get()
 
     # flip!
     if(FLAGS.video is None):
@@ -193,7 +207,7 @@ if __name__ == '__main__':
                   bottomLeftOrigin=False)
 
     # Display the resulting frame
-    cv2.imshow("Press q to exit", cv_img)
+    cv2.imshow("press q to exit", cv_img)
     ret = cv2.waitKey(1)
     if ret == ord('q'):
       break
@@ -201,4 +215,4 @@ if __name__ == '__main__':
     idx += 1
 
   worker.stop()
-  cv2.destroyAllWindows()
+  worker.join()
