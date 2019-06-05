@@ -130,8 +130,8 @@ if __name__ == '__main__':
     from tasks.classification.modules.user import User
     user = User(FLAGS.path)
 
-  cv2.namedWindow('predictions', cv2.WINDOW_NORMAL)
-  cv2.resizeWindow('predictions', 960, 540)
+  cv2.namedWindow("press q to exit", cv2.WINDOW_NORMAL)
+  cv2.resizeWindow("press q to exit", 960, 540)
 
   # open images
   if FLAGS.video is None:
@@ -193,9 +193,9 @@ if __name__ == '__main__':
                   bottomLeftOrigin=False)
 
     # Display the resulting frame
-    cv2.imshow('predictions', cv_img)
+    cv2.imshow("Press q to exit", cv_img)
     ret = cv2.waitKey(1)
-    if ret > 0:
+    if ret == ord('q'):
       break
 
     idx += 1

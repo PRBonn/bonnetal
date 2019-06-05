@@ -26,12 +26,16 @@ class CaptureRunner(Thread):
   def run(self):
     self.stopping = False
     while not self.stopping:
-      ret, cv_img = cap.read()
+      if cap.isOpened():
+        ret, cv_img = cap.read()
+      else:
+        self.stop()
       if ret:
         if not self.blocking and not self.queue.full():
           self.queue.put_nowait(cv_img)
         elif self.blocking:
           self.queue.put(cv_img, block=self.blocking)
+
 
   def stop(self):
     self.stopping = True
@@ -150,8 +154,8 @@ if __name__ == '__main__':
     user = User(FLAGS.path)
 
   if FLAGS.verbose:
-    cv2.namedWindow('predictions', cv2.WINDOW_NORMAL)
-    cv2.resizeWindow('predictions', 960, 540)
+    cv2.namedWindow("press q to exit", cv2.WINDOW_NORMAL)
+    cv2.resizeWindow("press q to exit", 960, 540)
 
   # open images
   if FLAGS.video is None:
@@ -177,7 +181,7 @@ if __name__ == '__main__':
 
   # infer images
   idx = 0
-  while cap.isOpened():
+  while not worker.stopping:
     # order
     if(FLAGS.verbose):
       print("*" * 80)
@@ -226,9 +230,9 @@ if __name__ == '__main__':
 
     # show
     if FLAGS.verbose:
-      cv2.imshow("predictions", stack)
+      cv2.imshow("press q to exit", stack)
       ret = cv2.waitKey(1)
-      if ret > 0:
+      if ret == ord('q') and FLAGS.log is None:
         break
 
     # save to log
