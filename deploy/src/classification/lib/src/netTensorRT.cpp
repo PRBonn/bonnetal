@@ -53,12 +53,28 @@ NetTensorRT::NetTensorRT(const std::string& model_path)
   // prepare buffers for io :)
   prepareBuffer();
 
+  CUDA_CHECK(cudaStreamCreate(&_cudaStream));
+
 }  // namespace classification
 
 /**
  * @brief      Destroys the object.
  */
 NetTensorRT::~NetTensorRT() {
+  
+  // free cuda buffers
+  int n_bindings = _engine->getNbBindings();
+  for (int i = 0; i < n_bindings; i++) {
+    CUDA_CHECK(cudaFree(_deviceBuffers[i]));
+  }
+
+  // free cuda pinned mem
+  for(auto& buffer : _hostBuffers)
+    CUDA_CHECK(cudaFreeHost(buffer));
+
+  // destroy cuda stream
+  CUDA_CHECK(cudaStreamDestroy(_cudaStream));
+  
   // destroy the execution context
   if (_context) {
     _context->destroy();
@@ -107,19 +123,24 @@ std::vector<float> NetTensorRT::infer(const cv::Mat& image) {
       // put in buffer
       int buffer_idx = channel_offset * (_img_d - 1 - i) +
                        position[0] * _img_w + position[1];
-      ((float*)_buffers[0])[buffer_idx] = pixel[i];
+      _hostBuffers[_inBindIdx][buffer_idx] = pixel[i];
     }
   });
 
   // execute inference
-  cudaDeviceSynchronize();
-  _context->execute(1, &_buffers[0]);
-  cudaDeviceSynchronize();
+  CUDA_CHECK(cudaMemcpyAsync(_deviceBuffers[_inBindIdx], _hostBuffers[_inBindIdx],
+                                  getBufferSize(_engine->getBindingDimensions(_inBindIdx),
+                                             _engine->getBindingDataType(_inBindIdx)), cudaMemcpyHostToDevice, _cudaStream));
+  _context->enqueue(1, &_deviceBuffers[0], _cudaStream, nullptr);
+  CUDA_CHECK(cudaMemcpyAsync(_hostBuffers[_outBindIdx],_deviceBuffers[_outBindIdx], 
+                                  getBufferSize(_engine->getBindingDimensions(_outBindIdx),
+                                             _engine->getBindingDataType(_outBindIdx)), cudaMemcpyDeviceToHost, _cudaStream));
+  CUDA_CHECK(cudaStreamSynchronize(_cudaStream));
 
   // take the data out
   std::vector<float> logits(_n_classes);
   for (unsigned int i = 0; i < _n_classes; i++) {
-    logits[i] = ((float*)_buffers[1])[i];
+    logits[i] = _hostBuffers[_outBindIdx][i];
   }
 
   auto end = std::chrono::high_resolution_clock::now();
@@ -367,14 +388,25 @@ void NetTensorRT::prepareBuffer() {
   }
 
   // clear buffers and reserve memory
-  _buffers.clear();
-  _buffers.reserve(n_bindings);
+  _deviceBuffers.clear();
+  _deviceBuffers.reserve(n_bindings);
+  _hostBuffers.clear();
+  _hostBuffers.reserve(n_bindings);
 
-  // bind to cuda
+  // allocate memory
   for (int i = 0; i < n_bindings; i++) {
-    cudaMallocManaged(&_buffers[i],
+    CUDA_CHECK(cudaMalloc(&_deviceBuffers[i],
                       getBufferSize(_engine->getBindingDimensions(i),
-                                    _engine->getBindingDataType(i)));
+                                    _engine->getBindingDataType(i))));
+
+    CUDA_CHECK(cudaMallocHost(&_hostBuffers[i],
+                               getBufferSize(_engine->getBindingDimensions(i),
+                                             _engine->getBindingDataType(i))));
+
+    if(_engine->bindingIsInput(i))
+      _inBindIdx = i;
+    else
+      _outBindIdx = i;
   }
 
   // exit
