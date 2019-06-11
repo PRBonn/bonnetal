@@ -5,71 +5,68 @@ from common.onehot import to_one_hot
 
 
 class iouEval:
-  def __init__(self, n_classes, device, ignoreIndex=-1):
+  def __init__(self, n_classes, device, ignore=None):
     self.n_classes = n_classes
     self.device = device
-    # if ignoreIndex is larger than n_classes, consider no ignoreIndex
-    self.ignoreIndex = ignoreIndex if n_classes > ignoreIndex else -1
+    # if ignore is larger than n_classes, consider no ignoreIndex
+    self.ignore = torch.tensor(ignore).long()
+    self.include = torch.tensor(
+        [n for n in range(self.n_classes) if n not in self.ignore]).long()
+    print("[IOU EVAL] IGNORE: ", self.ignore)
+    print("[IOU EVAL] INCLUDE: ", self.include)
     self.reset()
 
   def num_classes(self):
     return self.n_classes
 
   def reset(self):
-    classes = self.n_classes if self.ignoreIndex == -1 else self.n_classes - 1
-    self.tp = torch.zeros(classes).double()
-    self.fp = torch.zeros(classes).double()
-    self.fn = torch.zeros(classes).double()
+    self.conf_matrix = torch.zeros(
+        (self.n_classes, self.n_classes), device=self.device).float()
+    self.ones = None
 
   def addBatch(self, x, y):  # x=preds, y=targets
     # sizes should be "batch_size x H x W"
+    x_row = x.reshape(-1)  # de-batchify
+    y_row = y.reshape(-1)  # de-batchify
 
-    # scatter to onehot
-    x_onehot = to_one_hot(x, self.n_classes).float()
-    y_onehot = to_one_hot(y, self.n_classes).float()
+    # idxs are labels and predictions
+    idxs = torch.stack([x_row, y_row], dim=0)
 
-    if (self.ignoreIndex != -1):
-      ignores = y_onehot[:, self.ignoreIndex].unsqueeze(1)
-      x_onehot = x_onehot[:, :self.ignoreIndex]
-      y_onehot = y_onehot[:, :self.ignoreIndex]
-    else:
-      ignores = 0
+    # ones is what I want to add to conf when I
+    if self.ones is None:
+      self.ones = torch.ones((idxs.shape[-1]), device=self.device).float()
 
-    # print(type(x_onehot))
-    # print(type(y_onehot))
-    # print(x_onehot.size())
-    # print(y_onehot.size())
+    # make confusion matrix (cols = gt, rows = pred)
+    self.conf_matrix = self.conf_matrix.index_put_(
+        tuple(idxs), self.ones, accumulate=True)
 
-    tpmult = x_onehot * y_onehot  # times prediction and gt coincide is 1
-    tp = torch.sum(torch.sum(torch.sum(tpmult, dim=0, keepdim=True),
-                             dim=2, keepdim=True), dim=3, keepdim=True).squeeze()
-    self.tp += tp.double().cpu()
-    del tpmult
-    del tp
+    # print(self.tp.shape)
+    # print(self.fp.shape)
+    # print(self.fn.shape)
 
-    # times prediction says its that class and gt says its not (subtracting cases when its ignore label!)
-    fpmult = x_onehot * (1 - y_onehot - ignores)
-    fp = torch.sum(torch.sum(torch.sum(fpmult, dim=0, keepdim=True),
-                             dim=2, keepdim=True), dim=3, keepdim=True).squeeze()
-    self.fp += fp.double().cpu()
-    del fp
-    del fpmult
+  def getStats(self):
+    # remove fp and fn from confusion on the ignore classes cols and rows
+    conf = self.conf_matrix.clone()
+    conf[self.ignore] = 0
+    conf[:, self.ignore] = 0
 
-    # times prediction says its not that class and gt says it is
-    fnmult = (1 - x_onehot) * (y_onehot)
-    fn = torch.sum(torch.sum(torch.sum(fnmult, dim=0, keepdim=True),
-                             dim=2, keepdim=True), dim=3, keepdim=True).squeeze()
-    self.fn += fn.double().cpu()
-    del fn
-    del fnmult
+    # get the clean stats
+    tp = conf.diag()
+    fp = conf.sum(dim=1) - tp
+    fn = conf.sum(dim=0) - tp
+    return tp, fp, fn
 
   def getIoU(self):
-    num = self.tp
-    den = self.tp + self.fp + self.fn + 1e-15
-    iou = num / den
-    return torch.mean(iou), iou  # returns "iou mean", "iou per class"
+    tp, fp, fn = self.getStats()
+    intersection = tp
+    union = tp + fp + fn + 1e-15
+    iou = intersection / union
+    iou_mean = (intersection[self.include] / union[self.include]).mean()
+    return iou_mean, iou  # returns "iou mean", "iou per class" ALL CLASSES
 
   def getacc(self):
-    num = torch.sum(self.tp)
-    den = torch.sum(self.tp) + torch.sum(self.fp) + 1e-15
-    return num / den  # returns "acc mean"
+    tp, fp, fn = self.getStats()
+    total_tp = tp.sum()
+    total = tp[self.include].sum() + fp[self.include].sum() + 1e-15
+    acc_mean = total_tp / total
+    return acc_mean  # returns "acc mean"

@@ -230,10 +230,10 @@ class Trainer():
     best_train_iou = 0.0
     best_val_iou = 0.0
 
-    self.ignore_class = -1
+    self.ignore_class = []
     for i, w in enumerate(self.loss_w):
       if w < 1e-10:
-        self.ignore_class = i
+        self.ignore_class.append(i)
         print("Ignoring class ", i, " in IoU evaluation")
     self.evaluator = iouEval(self.parser.get_n_classes(),
                              self.device, self.ignore_class)
