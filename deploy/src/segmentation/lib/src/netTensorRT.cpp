@@ -54,12 +54,26 @@ NetTensorRT::NetTensorRT(const std::string& model_path)
   // prepare buffers for io :)
   prepareBuffer();
 
+  CUDA_CHECK(cudaStreamCreate(&_cudaStream));
+
 }  // namespace segmentation
 
 /**
  * @brief      Destroys the object.
  */
 NetTensorRT::~NetTensorRT() {
+  // free cuda buffers
+  int n_bindings = _engine->getNbBindings();
+  for (int i = 0; i < n_bindings; i++) {
+    CUDA_CHECK(cudaFree(_deviceBuffers[i]));
+  }
+
+  // free cuda pinned mem
+  for (auto& buffer : _hostBuffers) CUDA_CHECK(cudaFreeHost(buffer));
+
+  // destroy cuda stream
+  CUDA_CHECK(cudaStreamDestroy(_cudaStream));
+
   // destroy the execution context
   if (_context) {
     _context->destroy();
@@ -107,14 +121,23 @@ cv::Mat NetTensorRT::infer(const cv::Mat& image) {
       // put in buffer
       int buffer_idx = channel_offset * (_img_d - 1 - i) +
                        position[0] * _img_w + position[1];
-      ((float*)_buffers[0])[buffer_idx] = pixel[i];
+      ((float*)_hostBuffers[_inBindIdx])[buffer_idx] = pixel[i];
     }
   });
 
   // execute inference
-  cudaDeviceSynchronize();
-  _context->execute(1, &_buffers[0]);
-  cudaDeviceSynchronize();
+  CUDA_CHECK(
+      cudaMemcpyAsync(_deviceBuffers[_inBindIdx], _hostBuffers[_inBindIdx],
+                      getBufferSize(_engine->getBindingDimensions(_inBindIdx),
+                                    _engine->getBindingDataType(_inBindIdx)),
+                      cudaMemcpyHostToDevice, _cudaStream));
+  _context->enqueue(1, &_deviceBuffers[0], _cudaStream, nullptr);
+  CUDA_CHECK(
+      cudaMemcpyAsync(_hostBuffers[_outBindIdx], _deviceBuffers[_outBindIdx],
+                      getBufferSize(_engine->getBindingDimensions(_outBindIdx),
+                                    _engine->getBindingDataType(_outBindIdx)),
+                      cudaMemcpyDeviceToHost, _cudaStream));
+  CUDA_CHECK(cudaStreamSynchronize(_cudaStream));
 
   // take the data out
   cv::Mat argmax(_img_h, _img_w, CV_32SC1);
@@ -123,7 +146,7 @@ cv::Mat NetTensorRT::infer(const cv::Mat& image) {
   argmax.forEach<int32_t>([&](int32_t& pixel, const int* position) -> void {
     // "n_classes"dimension array index from pose
     int32_t pix_idx = position[0] * _img_w + position[1];
-    pixel = ((int*)_buffers[1])[pix_idx];
+    pixel = ((int*)_hostBuffers[_outBindIdx])[pix_idx];
   });
 
   // post process
@@ -390,15 +413,27 @@ void NetTensorRT::prepareBuffer() {
   }
 
   // clear buffers and reserve memory
-  _buffers.clear();
-  _buffers.reserve(n_bindings);
+  _deviceBuffers.clear();
+  _deviceBuffers.reserve(n_bindings);
+  _hostBuffers.clear();
+  _hostBuffers.reserve(n_bindings);
 
-  // bind to cuda
+  // allocate memory
   for (int i = 0; i < n_bindings; i++) {
     nvinfer1::Dims dims = _engine->getBindingDimensions(i);
     nvinfer1::DataType dtype = _engine->getBindingDataType(i);
-    cudaMallocManaged(&_buffers[i], getBufferSize(dims, dtype));
+    CUDA_CHECK(cudaMalloc(&_deviceBuffers[i],
+                          getBufferSize(_engine->getBindingDimensions(i),
+                                        _engine->getBindingDataType(i))));
 
+    CUDA_CHECK(cudaMallocHost(&_hostBuffers[i],
+                              getBufferSize(_engine->getBindingDimensions(i),
+                                            _engine->getBindingDataType(i))));
+
+    if (_engine->bindingIsInput(i))
+      _inBindIdx = i;
+    else
+      _outBindIdx = i;
     // print for puny human
     std::cout << "Binding: " << i << ", type: " << (int)dtype << std::endl;
     for (int d = 0; d < dims.nbDims; d++) {

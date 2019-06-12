@@ -61,7 +61,6 @@ NetTensorRT::NetTensorRT(const std::string& model_path)
  * @brief      Destroys the object.
  */
 NetTensorRT::~NetTensorRT() {
-  
   // free cuda buffers
   int n_bindings = _engine->getNbBindings();
   for (int i = 0; i < n_bindings; i++) {
@@ -69,12 +68,11 @@ NetTensorRT::~NetTensorRT() {
   }
 
   // free cuda pinned mem
-  for(auto& buffer : _hostBuffers)
-    CUDA_CHECK(cudaFreeHost(buffer));
+  for (auto& buffer : _hostBuffers) CUDA_CHECK(cudaFreeHost(buffer));
 
   // destroy cuda stream
   CUDA_CHECK(cudaStreamDestroy(_cudaStream));
-  
+
   // destroy the execution context
   if (_context) {
     _context->destroy();
@@ -128,13 +126,17 @@ std::vector<float> NetTensorRT::infer(const cv::Mat& image) {
   });
 
   // execute inference
-  CUDA_CHECK(cudaMemcpyAsync(_deviceBuffers[_inBindIdx], _hostBuffers[_inBindIdx],
-                                  getBufferSize(_engine->getBindingDimensions(_inBindIdx),
-                                             _engine->getBindingDataType(_inBindIdx)), cudaMemcpyHostToDevice, _cudaStream));
+  CUDA_CHECK(
+      cudaMemcpyAsync(_deviceBuffers[_inBindIdx], _hostBuffers[_inBindIdx],
+                      getBufferSize(_engine->getBindingDimensions(_inBindIdx),
+                                    _engine->getBindingDataType(_inBindIdx)),
+                      cudaMemcpyHostToDevice, _cudaStream));
   _context->enqueue(1, &_deviceBuffers[0], _cudaStream, nullptr);
-  CUDA_CHECK(cudaMemcpyAsync(_hostBuffers[_outBindIdx],_deviceBuffers[_outBindIdx], 
-                                  getBufferSize(_engine->getBindingDimensions(_outBindIdx),
-                                             _engine->getBindingDataType(_outBindIdx)), cudaMemcpyDeviceToHost, _cudaStream));
+  CUDA_CHECK(
+      cudaMemcpyAsync(_hostBuffers[_outBindIdx], _deviceBuffers[_outBindIdx],
+                      getBufferSize(_engine->getBindingDimensions(_outBindIdx),
+                                    _engine->getBindingDataType(_outBindIdx)),
+                      cudaMemcpyDeviceToHost, _cudaStream));
   CUDA_CHECK(cudaStreamSynchronize(_cudaStream));
 
   // take the data out
@@ -396,14 +398,14 @@ void NetTensorRT::prepareBuffer() {
   // allocate memory
   for (int i = 0; i < n_bindings; i++) {
     CUDA_CHECK(cudaMalloc(&_deviceBuffers[i],
-                      getBufferSize(_engine->getBindingDimensions(i),
-                                    _engine->getBindingDataType(i))));
+                          getBufferSize(_engine->getBindingDimensions(i),
+                                        _engine->getBindingDataType(i))));
 
     CUDA_CHECK(cudaMallocHost(&_hostBuffers[i],
-                               getBufferSize(_engine->getBindingDimensions(i),
-                                             _engine->getBindingDataType(i))));
+                              getBufferSize(_engine->getBindingDimensions(i),
+                                            _engine->getBindingDataType(i))));
 
-    if(_engine->bindingIsInput(i))
+    if (_engine->bindingIsInput(i))
       _inBindIdx = i;
     else
       _outBindIdx = i;

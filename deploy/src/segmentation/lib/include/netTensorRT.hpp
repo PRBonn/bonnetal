@@ -24,6 +24,15 @@
 using namespace nvinfer1;  // I'm taking a liberty because the code is
                            // unreadable otherwise
 
+#define CUDA_CHECK(status)                                             \
+  {                                                                    \
+    if (status != cudaSuccess) {                                       \
+      printf("%s in %s at %d\n", cudaGetErrorString(status), __FILE__, \
+             __LINE__);                                                \
+      exit(-1);                                                        \
+    }                                                                  \
+  }
+
 namespace bonnetal {
 namespace segmentation {
 
@@ -135,7 +144,11 @@ class NetTensorRT : public Net {
   IExecutionContext*
       _context;     // execution context (must destroy in destructor too)
   Logger _gLogger;  // trt logger
-  std::vector<void*> _buffers;  // iobuffer
+  std::vector<void*> _deviceBuffers;  // device mem
+  cudaStream_t _cudaStream;           // cuda stream for async ops
+  std::vector<void*> _hostBuffers;
+  uint _inBindIdx;
+  uint _outBindIdx;
 };
 
 }  // namespace segmentation

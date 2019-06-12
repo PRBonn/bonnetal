@@ -14,21 +14,24 @@
 #include <ios>
 #include "net.hpp"
 
-#define MAX_WORKSPACE_SIZE (1UL << 33)  // gpu workspace size (8gb is pretty good)
+#define MAX_WORKSPACE_SIZE \
+  (1UL << 33)  // gpu workspace size (8gb is pretty good)
 #define MIN_WORKSPACE_SIZE (1UL << 20)  // gpu workspace size (pretty bad)
 
-#define DEVICE_DLA_0 0                // jetson DLA 0 enabled
-#define DEVICE_DLA_1 0                // jetson DLA 1 enabled
+#define DEVICE_DLA_0 0  // jetson DLA 0 enabled
+#define DEVICE_DLA_1 0  // jetson DLA 1 enabled
 
 using namespace nvinfer1;  // I'm taking a liberty because the code is
                            // unreadable otherwise
 
-#define CUDA_CHECK(status) {                                                      \
-    if(status != cudaSuccess) {                                                   \
-      printf("%s in %s at %d\n", cudaGetErrorString(status), __FILE__, __LINE__); \
-      exit(-1);                                                                   \
-    }                                                                             \
-}
+#define CUDA_CHECK(status)                                             \
+  {                                                                    \
+    if (status != cudaSuccess) {                                       \
+      printf("%s in %s at %d\n", cudaGetErrorString(status), __FILE__, \
+             __LINE__);                                                \
+      exit(-1);                                                        \
+    }                                                                  \
+  }
 
 namespace bonnetal {
 namespace classification {
@@ -142,11 +145,10 @@ class NetTensorRT : public Net {
       _context;     // execution context (must destroy in destructor too)
   Logger _gLogger;  // trt logger
   std::vector<void*> _deviceBuffers;  // device mem
-  cudaStream_t _cudaStream; // cuda stream for async ops
+  cudaStream_t _cudaStream;           // cuda stream for async ops
   std::vector<float*> _hostBuffers;
   uint _inBindIdx;
   uint _outBindIdx;
-
 };
 
 }  // namespace classification
