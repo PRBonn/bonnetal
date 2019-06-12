@@ -1,7 +1,8 @@
+#!/usr/bin/env python3
+
 # This file is covered by the LICENSE file in the root of this project.
 
 import torch
-from common.onehot import to_one_hot
 
 
 class iouEval:
@@ -21,7 +22,7 @@ class iouEval:
 
   def reset(self):
     self.conf_matrix = torch.zeros(
-        (self.n_classes, self.n_classes), device=self.device).float()
+        (self.n_classes, self.n_classes), device=self.device).long()
     self.ones = None
 
   def addBatch(self, x, y):  # x=preds, y=targets
@@ -34,7 +35,7 @@ class iouEval:
 
     # ones is what I want to add to conf when I
     if self.ones is None:
-      self.ones = torch.ones((idxs.shape[-1]), device=self.device).float()
+      self.ones = torch.ones((idxs.shape[-1]), device=self.device).long()
 
     # make confusion matrix (cols = gt, rows = pred)
     self.conf_matrix = self.conf_matrix.index_put_(
@@ -46,7 +47,7 @@ class iouEval:
 
   def getStats(self):
     # remove fp and fn from confusion on the ignore classes cols and rows
-    conf = self.conf_matrix.clone()
+    conf = self.conf_matrix.clone().double()
     conf[self.ignore] = 0
     conf[:, self.ignore] = 0
 
@@ -70,3 +71,28 @@ class iouEval:
     total = tp[self.include].sum() + fp[self.include].sum() + 1e-15
     acc_mean = total_tp / total
     return acc_mean  # returns "acc mean"
+
+
+if __name__ == "__main__":
+  # mock problem
+  nclasses = 2
+  ignore = []
+
+  # test with 2 squares and a known IOU
+  lbl = torch.zeros((7, 7)).long()
+  argmax = torch.zeros((7, 7)).long()
+
+  # put squares
+  lbl[2:4, 2:4] = 1
+  argmax[3:5, 3:5] = 1
+
+  # make evaluator
+  eval = iouEval(nclasses, torch.device('cpu'), ignore)
+
+  # run
+  eval.addBatch(argmax, lbl)
+  m_iou, iou = eval.getIoU()
+  print("IoU: ", m_iou)
+  print("IoU class: ", iou)
+  m_acc = eval.getacc()
+  print("Acc: ", m_acc)
