@@ -1,0 +1,267 @@
+# training parameters
+train:
+  loss: "xentropy"       # must be either xentropy or iou
+  max_epochs: 300
+  max_lr: 0.005          # sgd learning rate max
+  min_lr: 0.001          # warmup initial learning rate
+  up_epochs: 0.5         # warmup during first XX epochs (can be float)
+  down_epochs:  30       # warmdown during second XX epochs  (can be float)
+  max_momentum: 0.95     # sgd momentum max when lr is mim
+  min_momentum: 0.9      # sgd momentum min when lr is max
+  final_decay: 0.99      # learning rate decay per epoch after initial cycle (from min lr)
+  w_decay: 0.00001       # weight decay
+  batch_size: 4          # batch size
+  report_batch: 1       # every x batches, report loss
+  report_epoch: 1        # every x epochs, report validation set
+  save_summary: False    # Summary of weight histograms for tensorboard
+  save_imgs: True        # False doesn't save anything, True saves some 
+                         # sample images (one per batch of the last calculated batch)
+                         # in log folder
+  avg_N: 3               # average the N best models
+  crop_prop:
+    height: 512
+    width: 680
+
+# backbone parameters
+backbone:
+  name: "darknet"
+  dropout: 0.01
+  bn_d: 0.01
+  OS: 8 # output stride
+  train: True # train backbone?
+  extra:
+    darknet: "darknet53"
+
+decoder:
+  name: "aspp_residual"
+  dropout: 0.01
+  bn_d: 0.01
+  train: True # train decoder?
+  extra:
+    aspp_channels: 256
+    skip_os: [4, 2]
+    last_channels: 32
+
+# classification head parameters
+head:
+  name: "segmentation"
+  dropout: 0.01
+
+# dataset (to find parser)
+dataset:
+  name: "mapillary"
+  location: "/cache/datasets/mapillary/"
+  workers: 24  # number of threads to get data
+  img_means: #rgb
+    - 0.4823443
+    - 0.47741251
+    - 0.47012307
+  img_stds: #rgb
+    - 0.25748733
+    - 0.26280244
+    - 0.26970132
+  img_prop:
+    width: 680
+    height: 512
+    depth: 3
+  labels:
+    0: "animal--bird"
+    1: "animal--ground-animal"
+    2: "construction--barrier--curb"
+    3: "construction--barrier--fence"
+    4: "construction--barrier--guard-rail"
+    5: "construction--barrier--other-barrier"
+    6: "construction--barrier--wall"
+    7: "construction--flat--bike-lane"
+    8: "construction--flat--crosswalk-plain"
+    9: "construction--flat--curb-cut"
+    10: "construction--flat--parking"
+    11: "construction--flat--pedestrian-area"
+    12: "construction--flat--rail-track"
+    13: "construction--flat--road"
+    14: "construction--flat--service-lane"
+    15: "construction--flat--sidewalk"
+    16: "construction--structure--bridge"
+    17: "construction--structure--building"
+    18: "construction--structure--tunnel"
+    19: "human--person"
+    20: "human--rider--bicyclist"
+    21: "human--rider--motorcyclist"
+    22: "human--rider--other-rider"
+    23: "marking--crosswalk-zebra"
+    24: "marking--general"
+    25: "nature--mountain"
+    26: "nature--sand"
+    27: "nature--sky"
+    28: "nature--snow"
+    29: "nature--terrain"
+    30: "nature--vegetation"
+    31: "nature--water"
+    32: "object--banner"
+    33: "object--bench"
+    34: "object--bike-rack"
+    35: "object--billboard"
+    36: "object--catch-basin"
+    37: "object--cctv-camera"
+    38: "object--fire-hydrant"
+    39: "object--junction-box"
+    40: "object--mailbox"
+    41: "object--manhole"
+    42: "object--phone-booth"
+    43: "object--pothole"
+    44: "object--street-light"
+    45: "object--support--pole"
+    46: "object--support--traffic-sign-frame"
+    47: "object--support--utility-pole"
+    48: "object--traffic-light"
+    49: "object--traffic-sign--back"
+    50: "object--traffic-sign--front"
+    51: "object--trash-can"
+    52: "object--vehicle--bicycle"
+    53: "object--vehicle--boat"
+    54: "object--vehicle--bus"
+    55: "object--vehicle--car"
+    56: "object--vehicle--caravan"
+    57: "object--vehicle--motorcycle"
+    58: "object--vehicle--on-rails"
+    59: "object--vehicle--other-vehicle"
+    60: "object--vehicle--trailer"
+    61: "object--vehicle--truck"
+    62: "object--vehicle--wheeled-slow"
+    63: "void--car-mount"
+    64: "void--ego-vehicle"
+    65: "void--unlabeled"
+  labels_w:
+    0: 50.4737741  
+    1: 50.43313846 
+    2: 35.89212136 
+    3: 31.31626014 
+    4: 45.24376012 
+    5: 42.1455515
+    6: 35.63911283 
+    7: 42.7321446  
+    8: 44.86416279 
+    9: 48.42074971 
+    10: 45.70240615 
+    11: 38.19676243
+    12: 48.0993802   
+    13: 5.3228146  
+    14: 45.07480853 
+    15: 19.3013334  
+    16: 37.09273919  
+    17: 7.64226678
+    18: 48.89154736 
+    19: 43.67403033 
+    20: 49.57828263 
+    21: 49.86463544 
+    22: 50.4839975  
+    23: 36.42772259
+    24: 30.36167986 
+    25: 45.65085132 
+    26: 50.10170631 
+    27: 13.8296917  
+    28: 42.29329134 
+    29: 31.28469147
+    30: 6.49885698 
+    31: 48.12553707 
+    32: 48.89338451 
+    33: 50.12294763 
+    34: 50.39357643 
+    35: 39.34380858
+    36: 49.69491703 
+    37: 50.44514604 
+    38: 50.38132621 
+    39: 49.00403015 
+    40: 50.42608832 
+    41: 49.11133187
+    42: 50.2357603  
+    43: 50.20759142 
+    44: 49.09579741 
+    45: 35.478048   
+    46: 47.98907484 
+    47: 41.79759559
+    48: 46.49510156 
+    49: 48.60702458 
+    50: 40.41185463 
+    51: 49.16085902 
+    52: 49.06141766 
+    53: 50.28248898
+    54: 45.35479829 
+    55: 19.49995729 
+    56: 50.31669128 
+    57: 48.98800046 
+    58: 49.74357666 
+    59: 49.49995457
+    60: 50.22225647 
+    61: 42.38224891 
+    62: 50.33949273 
+    63: 48.64106623 
+    64: 0.0
+    65: 0.0
+  color_map: # bgr
+    0: [42, 42, 165]
+    1: [0, 192, 0]
+    2: [196, 196, 196]
+    3: [153, 153, 190]
+    4: [180, 165, 180]
+    5: [156, 102, 102]
+    6: [156, 102, 102]
+    7: [255, 64, 128]
+    8: [200, 140, 140]
+    9: [170, 170, 170]
+    10: [160, 170, 250]
+    11: [96, 96, 96]
+    12: [140, 150, 230]
+    13: [128, 64, 128]
+    14: [110, 110, 110]
+    15: [232, 35, 244]
+    16: [100, 100, 150]
+    17: [70, 70, 70]
+    18: [90, 120, 150]
+    19: [60, 20, 220]
+    20: [0, 0, 255]
+    21: [0, 0, 255]
+    22: [0, 0, 255]
+    23: [128, 128, 200]
+    24: [255, 255, 255]
+    25: [64, 170, 64]
+    26: [64, 64, 128]
+    27: [180, 130, 70]
+    28: [255, 255, 255]
+    29: [152, 251, 152]
+    30: [35, 142, 107]
+    31: [30, 170, 0]
+    32: [128, 255, 255]
+    33: [30, 0, 250]
+    34: [0, 0, 0]
+    35: [220, 220, 220]
+    36: [170, 170, 170]
+    37: [40, 40, 222]
+    38: [30, 170, 100]
+    39: [40, 40, 40]
+    40: [33, 33, 33]
+    41: [170, 170, 170]
+    42: [142, 0, 0]
+    43: [170, 170, 170]
+    44: [100, 170, 210]
+    45: [153, 153, 153]
+    46: [128, 128, 128]
+    47: [142, 0, 0]
+    48: [30, 170, 250]
+    49: [192, 192, 192]
+    50: [0, 220, 220]
+    51: [180, 165, 180]
+    52: [32, 11, 119]
+    53: [142, 0, 0]
+    54: [100, 60, 0]
+    55: [142, 0, 0]
+    56: [90, 0, 0]
+    57: [230, 0, 0]
+    58: [100, 80, 0]
+    59: [64, 64, 128]
+    60: [110, 0, 0]
+    61: [70, 0, 0]
+    62: [192, 0, 0]
+    63: [32, 32, 32]
+    64: [0, 0, 0]
+    65: [0, 0, 0]

@@ -97,23 +97,30 @@ These are the currently trained models we have:
 
 
 - Semantic Segmentation:
-  - Persons:
-    - [ERFNet - 512px](http://ipb.uni-bonn.de/html/projects/bonnetal/segmentation/persons-erfnet-512-88.tar.gz) (14ms/img @ VGA res, 6ms/img @ VGA/2 res)
-    - [MobilenetsV2 - 512px](http://ipb.uni-bonn.de/html/projects/bonnetal/segmentation/persons-mobilenetsv2-aspp-512-88.tar.gz)
+  - Persons (super fast):
+    - [ERFNet - VGA](http://ipb.uni-bonn.de/html/projects/bonnetal/segmentation/persons-erfnet-512-88.tar.gz)
+    - [MobilenetsV2 ASPP - VGA](http://ipb.uni-bonn.de/html/projects/bonnetal/segmentation/persons-mobilenetsv2-aspp-512-88.tar.gz)
+    - [MobilenetsV2 ASPP Res - VGA](http://ipb.uni-bonn.de/html/projects/bonnetal/segmentation/persons-mobilenetsv2-aspp-res-512-88.tar.gz)
   - Cityscapes:
     - [DarkNet21 ASPP - 512x1024px](http://ipb.uni-bonn.de/html/projects/bonnetal/segmentation/cityscapes_darknet21_aspp_1024_os8_69.tar.gz)
     - [DarkNet53 ASPP - 512x1024px](http://ipb.uni-bonn.de/html/projects/bonnetal/segmentation/cityscapes_darknet53_aspp_1024_os8_74.tar.gz)
+    - [DarkNet53 ASPP Residual - 512x1024px](http://ipb.uni-bonn.de/html/projects/bonnetal/segmentation/cityscapes_darknet53_aspp_res_1024_os8_73.tar.gz)
     - [DarkNet53 ASPP - 1024x2048px](http://ipb.uni-bonn.de/html/projects/bonnetal/segmentation/cityscapes_darknet53_aspp_2048_os8_76.tar.gz)
     - [MobilenetsV2 ASPP - 512x1024px](http://ipb.uni-bonn.de/html/projects/bonnetal/segmentation/cityscapes_mobilenetsv2_aspp_1024_os8_70.tar.gz)
+    - [MobilenetsV2 ASPP Residual- 512x1024px](http://ipb.uni-bonn.de/html/projects/bonnetal/segmentation/cityscapes_mobilenetsv2_aspp_res_1024_os8_70.tar.gz)
     - [ERFNet - 512x1024px](http://ipb.uni-bonn.de/html/projects/bonnetal/segmentation/cityscapes_erfnet_1024_70.tar.gz)
     - [ERFNet - 1024x2048px](http://ipb.uni-bonn.de/html/projects/bonnetal/segmentation/cityscapes_erfnet_2048_68.tar.gz)
-  - Synthia: (cooking)
-  - Mapillary: (cooking)
+  - Synthia:
+    - [MobilenetsV2 ASPP Res - 512](http://ipb.uni-bonn.de/html/projects/bonnetal/segmentation/synthia_mobilenetsv2_aspp_res_512_os8_71.tar.gz)
+  - Mapillary Vistas:
+    - [MobilenetsV2 ASPP Res - 512](http://ipb.uni-bonn.de/html/projects/bonnetal/segmentation/mapillary_mobilenetsv2_aspp_res_512_os8_34.tar.gz)
+    - [DarkNet53 ASPP Res - 512](http://ipb.uni-bonn.de/html/projects/bonnetal/segmentation/mapillary_darknet53_aspp_res_512_os8_40.tar.gz
   - Berkeley 100k: (cooking)
   - ApolloScape: (cooking)
   - COCO: (cooking)
   - Crop Weed: (cooking)
   - Grapes: (cooking)
+
 
 
 - Instance Segmentation:
@@ -208,14 +215,14 @@ queueing tool to share GPU, CPU and Memory resources in a multi-GPU environment.
 ---
 ## Contributors
 
-| Andres Milioto | Ignacio Vizzo | Leonard Mandtler | Laura Zabawa | Jens Behley | Cyrill Stachniss |
-| --- | --- | --- | --- | ---| --- |
-| <img src="https://i.ibb.co/5hs3gdT/serious-alpha-bw-square.jpg" alt="drawing" height="90"/> | <img src="https://i.ibb.co/VQL9JMS/nacho.png" alt="drawing" height="90"/> | <img src="https://i.ibb.co/nn0sPdK/leomandtler.jpg" alt="drawing" height="90"/> | <img src="https://i.ibb.co/DDpGN5Z/laura.png" alt="drawing" height="90"/> | <img src="https://i.ibb.co/bPprCML/behley.jpg" alt="drawing" height="90"/>| <img src="https://i.ibb.co/v31krJM/cyrill-2015-10.jpg" alt="drawing" height="90"/> |
-| [GitHub](https://github.com/tano297) | [GitHub](https://github.com/nachovizzo)  | [LinkedIn](https://www.linkedin.com/in/leonard-mandtler-00a6a7121/) | [University of Bonn](https://www.gib.uni-bonn.de/team/wm/lzabawa) | [University of Bonn](http://www.ipb.uni-bonn.de/people/jens-behley/) | [University of Bonn](http://www.ipb.uni-bonn.de/people/cyrill-stachniss/) |
-| [University of Bonn](http://www.ipb.uni-bonn.de/people/andres-milioto/) | [University of Bonn](http://www.ipb.uni-bonn.de/people/ignacio-vizzo/) |  |  | [Google Scholar](https://scholar.google.com/citations?user=L4LZHXsAAAAJ) | [Google Scholar](https://scholar.google.com/citations?user=8vib2lAAAAAJ) |
-| [LinkedIn](https://www.linkedin.com/in/amilioto/) | [LinkedIn](https://www.linkedin.com/in/vizzoignacio/) | | |  | [YouTube](https://www.youtube.com/channel/UCi1TC2fLRvgBQNe-T4dp8Eg) |
-| [ResearchGate](https://www.researchgate.net/profile/Andres_Milioto) | [ResearchGate](https://www.researchgate.net/profile/Ignacio_Vizzo) |  |  | | | 
-| [Google Scholar](https://scholar.google.de/citations?user=LzsKE7IAAAAJ&hl=en) | [Google Scholar](https://scholar.google.de/citations?user=nTjF-kkAAAAJ&hl=en) |  |  |  | |
+| Andres Milioto                                                                              | Ignacio Vizzo                                                                 | Leonard Mandtler                                                                | Laura Zabawa                                                              | Jens Behley                                                                | Cyrill Stachniss                                                                   |
+| ------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | ------------------------------------------------------------------------- | -------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| <img src="https://i.ibb.co/5hs3gdT/serious-alpha-bw-square.jpg" alt="drawing" height="90"/> | <img src="https://i.ibb.co/VQL9JMS/nacho.png" alt="drawing" height="90"/>     | <img src="https://i.ibb.co/nn0sPdK/leomandtler.jpg" alt="drawing" height="90"/> | <img src="https://i.ibb.co/DDpGN5Z/laura.png" alt="drawing" height="90"/> | <img src="https://i.ibb.co/bPprCML/behley.jpg" alt="drawing" height="90"/> | <img src="https://i.ibb.co/v31krJM/cyrill-2015-10.jpg" alt="drawing" height="90"/> |
+| [GitHub](https://github.com/tano297)                                                        | [GitHub](https://github.com/nachovizzo)                                       | [LinkedIn](https://www.linkedin.com/in/leonard-mandtler-00a6a7121/)             | [University of Bonn](https://www.gib.uni-bonn.de/team/wm/lzabawa)         | [University of Bonn](http://www.ipb.uni-bonn.de/people/jens-behley/)       | [University of Bonn](http://www.ipb.uni-bonn.de/people/cyrill-stachniss/)          |
+| [University of Bonn](http://www.ipb.uni-bonn.de/people/andres-milioto/)                     | [University of Bonn](http://www.ipb.uni-bonn.de/people/ignacio-vizzo/)        |                                                                                 |                                                                           | [Google Scholar](https://scholar.google.com/citations?user=L4LZHXsAAAAJ)   | [Google Scholar](https://scholar.google.com/citations?user=8vib2lAAAAAJ)           |
+| [LinkedIn](https://www.linkedin.com/in/amilioto/)                                           | [LinkedIn](https://www.linkedin.com/in/vizzoignacio/)                         |                                                                                 |                                                                           |                                                                            | [YouTube](https://www.youtube.com/channel/UCi1TC2fLRvgBQNe-T4dp8Eg)                |
+| [ResearchGate](https://www.researchgate.net/profile/Andres_Milioto)                         | [ResearchGate](https://www.researchgate.net/profile/Ignacio_Vizzo)            |                                                                                 |                                                                           |                                                                            |                                                                                    |
+| [Google Scholar](https://scholar.google.de/citations?user=LzsKE7IAAAAJ&hl=en)               | [Google Scholar](https://scholar.google.de/citations?user=nTjF-kkAAAAJ&hl=en) |                                                                                 |                                                                           |                                                                            |                                                                                    |
 
 ---
 ## Acknowledgements

@@ -1,0 +1,76 @@
+# training parameters
+train:
+  loss: "xentropy"       # must be either xentropy or iou
+  max_epochs: 300
+  max_lr: 0.001          # sgd learning rate max
+  min_lr: 0.001          # warmup initial learning rate
+  up_epochs: 0           # warmup during first XX epochs (can be float)
+  down_epochs:  0        # warmdown during second XX epochs  (can be float)
+  max_momentum: 0.95     # sgd momentum max when lr is mim
+  min_momentum: 0.95     # sgd momentum min when lr is max
+  final_decay: 0.95      # learning rate decay per epoch after initial cycle (from min lr)
+  w_decay: 0.00001       # weight decay
+  batch_size: 12         # batch size
+  report_batch: 1        # every x batches, report loss
+  report_epoch: 1        # every x epochs, report validation set
+  save_summary: False    # Summary of weight histograms for tensorboard
+  save_imgs: True        # False doesn't save anything, True saves some 
+                         # sample images (one per batch of the last calculated batch)
+                         # in log folder
+  avg_N: 3               # average the N best models
+  crop_prop:
+    height: 480
+    width: 480
+
+# backbone parameters
+backbone:
+  name: "mobilenetv2"
+  dropout: 0.1
+  bn_d: 0.01
+  OS: 16 # output stride
+  train: True # train backbone?
+  extra:
+    width_mult: 1.0
+    shallow_feats: True # get features before the last layer (mn2)
+
+decoder:
+  name: "aspp_residual"
+  dropout: 0.1
+  bn_d: 0.01
+  train: True # train decoder?
+  extra:
+    aspp_channels: 32
+    skip_os: [4]
+    last_channels: 16
+
+# classification head parameters
+head:
+  name: "segmentation"
+  dropout: 0.1
+
+# dataset (to find parser)
+dataset:
+  name: "persons"
+  location: "/cache/datasets/persons/dataset"
+  workers: 3 # number of threads to get data
+  img_means: #rgb
+    - 0.46992042
+    - 0.45250652
+    - 0.42510188
+  img_stds: #rgb
+    - 0.29184756
+    - 0.28221624
+    - 0.29719201
+  img_prop:
+    width: 640
+    height: 480
+    depth: 3
+  labels:
+    0: 'background'
+    1: 'person'
+  labels_w:
+    0: 1.0
+    1: 1.0
+  color_map: # bgr
+    0: [0,0,0]
+    1: [0,255,0]

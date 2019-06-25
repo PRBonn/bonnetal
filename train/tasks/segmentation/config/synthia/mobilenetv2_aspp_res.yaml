@@ -1,0 +1,106 @@
+# training parameters
+train:
+  loss: "xentropy"       # must be either xentropy or iou
+  max_epochs: 300
+  max_lr: 0.01           # sgd learning rate max
+  min_lr: 0.001          # warmup initial learning rate
+  up_epochs: 1           # warmup during first XX epochs (can be float)
+  down_epochs:  10       # warmdown during second XX epochs  (can be float)
+  max_momentum: 0.95     # sgd momentum max when lr is mim
+  min_momentum: 0.9      # sgd momentum min when lr is max
+  final_decay: 0.99      # learning rate decay per epoch after initial cycle (from min lr)
+  w_decay: 0.00001       # weight decay
+  batch_size: 4          # batch size
+  report_batch: 1        # every x batches, report loss
+  report_epoch: 1        # every x epochs, report validation set
+  save_summary: False    # Summary of weight histograms for tensorboard
+  save_imgs: True        # False doesn't save anything, True saves some 
+                         # sample images (one per batch of the last calculated batch)
+                         # in log folder
+  avg_N: 3               # average the N best models
+  crop_prop:
+    height: 384
+    width: 512
+
+# backbone parameters
+backbone:
+  name: "mobilenetv2"
+  dropout: 0.01
+  bn_d: 0.01
+  OS: 8 # output stride
+  train: True # train backbone?
+  extra:
+    width_mult: 1.0
+    shallow_feats: True # get features before the last layer (mn2)
+
+decoder:
+  name: "aspp_residual"
+  dropout: 0.01
+  bn_d: 0.01
+  train: True # train decoder?
+  extra:
+    aspp_channels: 48
+    skip_os: [4, 2]
+    last_channels: 32
+
+# classification head parameters
+head:
+  name: "segmentation"
+  dropout: 0.01
+
+# dataset (to find parser)
+dataset:
+  name: "synthia"
+  location: "/cache/datasets/synthia/dataset/"
+  workers: 3  # number of threads to get data
+  img_means: #rgb
+    - 0.39306904
+    - 0.37922944
+    - 0.3555977
+  img_stds: #rgb
+    - 0.20292485
+    - 0.19964703
+    - 0.19909012
+  img_prop:
+    width: 512
+    height: 384
+    depth: 3
+  labels:
+    0: "void"
+    1: "Sky"
+    2: "Building"
+    3: "Road"
+    4: "Sidewalk"
+    5: "Fence"
+    6: "Vegetation"
+    7: "Pole"
+    8: "Car"
+    9: "Sign"
+    10: "Pedestrian"
+    11: "Cyclist"
+  labels_w:
+    0: 0.0
+    1: 17.40556773
+    2: 50.49834979
+    3: 3.8312145
+    4: 50.49834979
+    5: 50.49834979
+    6: 50.49834979
+    7: 50.49834979
+    8: 50.49834979
+    9: 50.49834979
+    10: 50.49834979
+    11: 50.49834979
+  color_map: # bgr
+    0: [0,0,0]
+    1: [128,128,128]
+    2: [0,0,128]
+    3: [128,64,128]
+    4: [192,0,0]
+    5: [128,64,64]
+    6: [0,128,128]
+    7: [128,192,192]
+    8: [128,0,64]
+    9: [128,128,192]
+    10: [0,64,64]
+    11: [192,128,0]
