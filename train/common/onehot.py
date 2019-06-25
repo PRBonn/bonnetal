@@ -6,10 +6,10 @@ def to_one_hot(tensor, nClasses):
   if len(tensor.size()) == 1:
     b = tensor.size(0)
     if tensor.is_cuda:
-      one_hot = torch.zeros(nClasses, b, device=torch.device(
-          'cuda')).scatter_(0, tensor.unsqueeze(0), 1)
+      one_hot = torch.zeros(b, nClasses, device=torch.device(
+          'cuda')).scatter_(1, tensor.unsqueeze(1), 1)
     else:
-      one_hot = torch.zeros(nClasses, b).scatter_(0, tensor.unsqueeze(0), 1)
+      one_hot = torch.zeros(b, nClasses).scatter_(1, tensor.unsqueeze(1), 1)
   elif len(tensor.size()) == 2:
     n, b = tensor.size()
     if tensor.is_cuda:
