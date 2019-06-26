@@ -114,7 +114,7 @@ These are the currently trained models we have:
     - [MobilenetsV2 ASPP Res - 512](http://ipb.uni-bonn.de/html/projects/bonnetal/segmentation/synthia_mobilenetsv2_aspp_res_512_os8_71.tar.gz)
   - Mapillary Vistas:
     - [MobilenetsV2 ASPP Res - 512](http://ipb.uni-bonn.de/html/projects/bonnetal/segmentation/mapillary_mobilenetsv2_aspp_res_512_os8_34.tar.gz)
-    - [DarkNet53 ASPP Res - 512](http://ipb.uni-bonn.de/html/projects/bonnetal/segmentation/mapillary_darknet53_aspp_res_512_os8_40.tar.gz
+    - [DarkNet53 ASPP Res - 512](http://ipb.uni-bonn.de/html/projects/bonnetal/segmentation/mapillary_darknet53_aspp_res_512_os8_40.tar.gz)
   - Berkeley 100k: (cooking)
   - ApolloScape: (cooking)
   - COCO: (cooking)
