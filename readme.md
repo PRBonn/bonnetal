@@ -40,10 +40,11 @@ The main reason for the "lack" of variety of backbones so far is that imagenet p
   
   - Full-image classification: [/train](train/tasks/classification), [/deploy](deploy/src/classification).
   - Semantic Segmentation: [/train](train/tasks/segmentation), [/deploy](deploy/src/segmentation).
-  - Instance Segmentation: [/train](train/tasks/instances), [/deploy](deploy/src/instances).
+  - More coming...
+  <!-- - Instance Segmentation: [/train](train/tasks/instances), [/deploy](deploy/src/instances).
   - Object Detection: [/train](train/tasks/detection), [/deploy](deploy/src/detection),
   - CNN Keypoint/Feature Extraction: [/train](train/tasks/features), [/deploy](deploy/src/features).
-  - Counting: [/train](train/tasks/counting), [/deploy](deploy/src/counting).
+  - Counting: [/train](train/tasks/counting), [/deploy](deploy/src/counting). -->
 
 The code is (like the original Bonnet) separated into a [training](train/) part developed in Python, using Pytorch, and a [deployment/inference](deploy/) part, which is fully written in C++, and contains the code to run on the robot, either using ROS or standalone.
 
@@ -115,25 +116,6 @@ These are the currently trained models we have:
   - Mapillary Vistas:
     - [MobilenetsV2 ASPP Res - 512](http://ipb.uni-bonn.de/html/projects/bonnetal/segmentation/mapillary_mobilenetsv2_aspp_res_512_os8_34.tar.gz)
     - [DarkNet53 ASPP Res - 512](http://ipb.uni-bonn.de/html/projects/bonnetal/segmentation/mapillary_darknet53_aspp_res_512_os8_40.tar.gz)
-  - Berkeley 100k: (cooking)
-  - ApolloScape: (cooking)
-  - COCO: (cooking)
-  - Crop Weed: (cooking)
-  - Grapes: (cooking)
-
-
-
-- Instance Segmentation:
-  - Cityscapes: (cooking)
-  - COCO + Persons: (cooking)
-
-- Object Detection:
-  - Cityscapes: (cooking)
-  - COCO: (cooking)
-  - Pascal: (cooking)
-
-- Counting:
-  - Grapes: (cooking)
 
 ---
 ## License
