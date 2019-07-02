@@ -26,6 +26,7 @@ class CaptureRunner(Thread):
   def run(self):
     self.stopping = False
     while not self._stop_event.is_set():
+      ret = None
       if self.cap.isOpened():
         ret, cv_img = self.cap.read()
       else:
