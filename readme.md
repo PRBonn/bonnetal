@@ -195,17 +195,35 @@ queueing tool to share GPU, CPU and Memory resources in a multi-GPU environment.
 - [nvidia-docker](https://github.com/NVIDIA/nvidia-docker): Docker that allows you to also exploit your nvidia GPU.
 
 ---
-## Contributors
+## Internal Contributors (not present in open-source commits)
 
-| Andres Milioto                                                                              | Ignacio Vizzo                                                                 | Leonard Mandtler                                                                | Laura Zabawa                                                              | Jens Behley                                                                | Cyrill Stachniss                                                                   |
-| ------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | ------------------------------------------------------------------------- | -------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| <img src="https://i.ibb.co/5hs3gdT/serious-alpha-bw-square.jpg" alt="drawing" height="90"/> | <img src="https://i.ibb.co/VQL9JMS/nacho.png" alt="drawing" height="90"/>     | <img src="https://i.ibb.co/nn0sPdK/leomandtler.jpg" alt="drawing" height="90"/> | <img src="https://i.ibb.co/DDpGN5Z/laura.png" alt="drawing" height="90"/> | <img src="https://i.ibb.co/bPprCML/behley.jpg" alt="drawing" height="90"/> | <img src="https://i.ibb.co/v31krJM/cyrill-2015-10.jpg" alt="drawing" height="90"/> |
-| [GitHub](https://github.com/tano297)                                                        | [GitHub](https://github.com/nachovizzo)                                       | [LinkedIn](https://www.linkedin.com/in/leonard-mandtler-00a6a7121/)             | [University of Bonn](https://www.gib.uni-bonn.de/team/wm/lzabawa)         | [University of Bonn](http://www.ipb.uni-bonn.de/people/jens-behley/)       | [University of Bonn](http://www.ipb.uni-bonn.de/people/cyrill-stachniss/)          |
-| [University of Bonn](http://www.ipb.uni-bonn.de/people/andres-milioto/)                     | [University of Bonn](http://www.ipb.uni-bonn.de/people/ignacio-vizzo/)        |                                                                                 |                                                                           | [Google Scholar](https://scholar.google.com/citations?user=L4LZHXsAAAAJ)   | [Google Scholar](https://scholar.google.com/citations?user=8vib2lAAAAAJ)           |
-| [LinkedIn](https://www.linkedin.com/in/amilioto/)                                           | [LinkedIn](https://www.linkedin.com/in/vizzoignacio/)                         |                                                                                 |                                                                           |                                                                            | [YouTube](https://www.youtube.com/channel/UCi1TC2fLRvgBQNe-T4dp8Eg)                |
-| [ResearchGate](https://www.researchgate.net/profile/Andres_Milioto)                         | [ResearchGate](https://www.researchgate.net/profile/Ignacio_Vizzo)            |                                                                                 |                                                                           |                                                                            |                                                                                    |
-| [Google Scholar](https://scholar.google.de/citations?user=LzsKE7IAAAAJ&hl=en)               | [Google Scholar](https://scholar.google.de/citations?user=nTjF-kkAAAAJ&hl=en) |                                                                                 |                                                                           |                                                                            |                                                                                    |
+- Andres Milioto
+  - [GitHub](https://github.com/tano297)
+  - [University of Bonn](http://www.ipb.uni-bonn.de/people/andres-milioto/)
+  - [LinkedIn](https://www.linkedin.com/in/amilioto/)  
+  - [ResearchGate](https://www.researchgate.net/profile/Andres_Milioto)
+  - [Google Scholar](https://scholar.google.de/citations?user=LzsKE7IAAAAJ&hl=en)
 
+- Ignacio Vizzo
+  - [GitHub](https://github.com/nachovizzo)
+  - [University of Bonn](http://www.ipb.uni-bonn.de/people/ignacio-vizzo/)
+  - [LinkedIn](https://www.linkedin.com/in/vizzoignacio/)
+  - [ResearchGate](https://www.researchgate.net/profile/Ignacio_Vizzo)
+  - [Google Scholar](https://scholar.google.de/citations?user=nTjF-kkAAAAJ&hl=en)
+
+- Leonard Mandtler
+  - [LinkedIn](https://www.linkedin.com/in/leonard-mandtler-00a6a7121/)
+
+- Jens Behley
+  - [GitHub](https://github.com/jbehley)
+  - [University of Bonn](http://www.ipb.uni-bonn.de/people/jens-behley/)
+  - [Google Scholar](https://scholar.google.com/citations?user=L4LZHXsAAAAJ)
+
+- Cyrill Stachniss
+  - [University of Bonn](http://www.ipb.uni-bonn.de/people/cyrill-stachniss/)
+  - [Google Scholar](https://scholar.google.com/citations?user=8vib2lAAAAAJ)
+  - [YouTube](https://www.youtube.com/channel/UCi1TC2fLRvgBQNe-T4dp8Eg)
+  
 ---
 ## Acknowledgements
 
