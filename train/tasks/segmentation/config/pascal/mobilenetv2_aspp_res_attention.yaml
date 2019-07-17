@@ -1,0 +1,136 @@
+#training parameters
+train:
+  loss: "xentropy"       # must be either xentropy or iou
+  max_epochs: 1000
+  max_lr: 0.0003         # sgd learning rate max
+  min_lr: 0.0003         # warmup initial learning rate
+  up_epochs: 0           # warmup during first XX epochs (can be float)
+  down_epochs:  0        # warmdown during second XX epochs  (can be float)
+  max_momentum: 0.9      # sgd momentum max when lr is mim
+  min_momentum: 0.9      # sgd momentum min when lr is max
+  final_decay: 0.99      # learning rate decay per epoch after initial cycle (from min lr)
+  w_decay: 0.00001       # weight decay
+  batch_size:  6         # batch size
+  report_batch: 1        # every x batches, report loss
+  report_epoch: 1        # every x epochs, report validation set
+  save_summary: False    # Summary of weight histograms for tensorboard
+  save_imgs: True        # False doesn't save anything, True saves some 
+                         # sample images (one per batch of the last calculated batch)
+                         # in log folder
+  avg_N: 5               # average the N best models
+  crop_prop:
+    height: 448
+    width: 448
+
+# backbone parameters
+backbone:
+  name: "mobilenetv2"
+  dropout: 0.0
+  bn_d: 0.01
+  OS: 8  # output stride
+  train: True # train backbone?
+  extra:
+    width_mult: 1.0
+    shallow_feats: True # get features before the last layer (mn2)
+
+decoder:
+  name: "aspp_residual_attention"
+  dropout: 0.0
+  bn_d: 0.01
+  train: True # train decoder?
+  extra:
+    aspp_channels: 64
+    skip_os: [4, 2]
+    last_channels: 32
+
+# classification head parameters
+head:
+  name: "segmentation"
+  dropout: 0.0
+
+# dataset (to find parser)
+dataset:
+  name: "pascal"
+  location: "/cache/datasets/pascal/VOC2012aug/"
+  workers: 12  # number of threads to get data
+  img_means: #rgb
+    - 0.45223407
+    - 0.4311933
+    - 0.39899281
+  img_stds: #rgb
+    - 0.27660984
+    - 0.27312623
+    - 0.28520525
+  img_prop:
+    width: 512
+    height: 512
+    depth: 3
+  labels:
+    0 : 'background'
+    1 : 'aeroplane'
+    2 : 'bicycle'
+    3 : 'bird'
+    4 : 'boat'
+    5 : 'bottle'
+    6 : 'bus'
+    7 : 'car'
+    8 : 'cat'
+    9 : 'chair'
+    10 : 'cow'
+    11 : 'diningtable'
+    12 : 'dog'
+    13 : 'horse'
+    14 : 'motorbike'
+    15 : 'person'
+    16 : 'pottedplant'
+    17 : 'sheep'
+    18 : 'sofa'
+    19 : 'train'
+    20 : 'tvmonitor'
+    21 : 'void'
+  labels_w:
+    0 : 1.85748429
+    1 : 37.39511976
+    2 : 43.95318014
+    3 : 35.70218637
+    4 : 39.73067016
+    5 : 38.10123389
+    6 : 27.76497476
+    7 : 30.26818736
+    8 : 23.26785978
+    9 : 34.35132469
+    10 : 34.23638246
+    11 : 31.77100104
+    12 : 26.82483072
+    13 : 34.46068846
+    14 : 33.28548492
+    15 : 15.21721153
+    16 : 39.60714259
+    17 : 36.17629464
+    18 : 30.26264657
+    19 : 28.94465548
+    20 : 36.33880067
+    21 : 0.0
+  color_map: # bgr
+    0 : [0,0,0]
+    1 : [0,0,128]
+    2 : [0,128,0]
+    3 : [0,128,128]
+    4 : [128,0,0]
+    5 : [128,0,128]
+    6 : [128,128,0]
+    7 : [128,128,128]
+    8 : [0,0,64]
+    9 : [0,0,192]
+    10 : [0,128,64]
+    11 : [0,128,192]
+    12 : [128,0,64]
+    13 : [128,0,192]
+    14 : [128,128,64]
+    15 : [128,128,192]
+    16 : [0,64,0]
+    17 : [0,64,128]
+    18 : [0,192,0]
+    19 : [0,192,128]
+    20 : [128,64,0]
+    21 : [255,255,255]

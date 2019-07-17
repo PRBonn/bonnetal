@@ -108,14 +108,21 @@ These are the currently trained models we have:
     - [DarkNet53 ASPP Residual - 512x1024px](http://ipb.uni-bonn.de/html/projects/bonnetal/segmentation/cityscapes_darknet53_aspp_res_1024_os8_73.tar.gz)
     - [DarkNet53 ASPP - 1024x2048px](http://ipb.uni-bonn.de/html/projects/bonnetal/segmentation/cityscapes_darknet53_aspp_2048_os8_76.tar.gz)
     - [MobilenetsV2 ASPP - 512x1024px](http://ipb.uni-bonn.de/html/projects/bonnetal/segmentation/cityscapes_mobilenetsv2_aspp_1024_os8_70.tar.gz)
+    - [MobilenetsV2 ASPP res attention - 512x1024px](http://ipb.uni-bonn.de/html/projects/bonnetal/segmentation/cityscapes_mobilenetsv2_aspp_res_attention_1024_os8_70.tar.gz)
     - [MobilenetsV2 ASPP Residual- 512x1024px](http://ipb.uni-bonn.de/html/projects/bonnetal/segmentation/cityscapes_mobilenetsv2_aspp_res_1024_os8_70.tar.gz)
     - [ERFNet - 512x1024px](http://ipb.uni-bonn.de/html/projects/bonnetal/segmentation/cityscapes_erfnet_1024_70.tar.gz)
     - [ERFNet - 1024x2048px](http://ipb.uni-bonn.de/html/projects/bonnetal/segmentation/cityscapes_erfnet_2048_68.tar.gz)
   - Synthia:
-    - [MobilenetsV2 ASPP Res - 512](http://ipb.uni-bonn.de/html/projects/bonnetal/segmentation/synthia_mobilenetsv2_aspp_res_512_os8_71.tar.gz)
+    - [MobilenetsV2 ASPP Res - 512px](http://ipb.uni-bonn.de/html/projects/bonnetal/segmentation/synthia_mobilenetsv2_aspp_res_512_os8_71.tar.gz)
   - Mapillary Vistas:
-    - [MobilenetsV2 ASPP Res - 512](http://ipb.uni-bonn.de/html/projects/bonnetal/segmentation/mapillary_mobilenetsv2_aspp_res_512_os8_34.tar.gz)
-    - [DarkNet53 ASPP Res - 512](http://ipb.uni-bonn.de/html/projects/bonnetal/segmentation/mapillary_darknet53_aspp_res_512_os8_40.tar.gz)
+    - [MobilenetsV2 ASPP Res - 512px](http://ipb.uni-bonn.de/html/projects/bonnetal/segmentation/mapillary_mobilenetsv2_aspp_res_512_os8_34.tar.gz)
+    - [DarkNet53 ASPP Res - 512px](http://ipb.uni-bonn.de/html/projects/bonnetal/segmentation/mapillary_darknet53_aspp_res_512_os8_40.tar.gz)
+  - Pascal VOC 2012:
+    - [MobilenetsV2 ASPP Res - 512px](http://ipb.uni-bonn.de/html/projects/bonnetal/segmentation/voc2012-mobilenetsv2_aspp_res_512_63.tar.gz)
+    - [MobilenetsV2 ASPP Res attention - 512px](http://ipb.uni-bonn.de/html/projects/bonnetal/segmentation/voc2012-mobilenetsv2_aspp_res_att_512_63.tar.gz)
+  - MS-COCO (Panoptic):
+    - [MobilenetsV2 ASPP Res - 512px](http://ipb.uni-bonn.de/html/projects/bonnetal/segmentation/coco-mobilenetsv2_aspp_res_512_34.tar.gz)
+    - [MobilenetsV2 ASPP Res att - 512px](http://ipb.uni-bonn.de/html/projects/bonnetal/segmentation/coco-mobilenetsv2_aspp_res_att_512_40.tar.gz)
 
 ---
 ## License
