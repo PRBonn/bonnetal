@@ -63,6 +63,10 @@ if __name__ == '__main__':
       subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD']).strip()))
   print("----------\n")
 
+  if FLAGS.path is None and FLAGS.cfg is None:
+    print("If no pretrained model is provided, then a cfg file MUST")
+    quit()
+
   # try to open data yaml
   try:
     if(FLAGS.cfg):
