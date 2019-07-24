@@ -40,6 +40,7 @@ class OneShot_LR(toptim._LRScheduler):
                                              max_momentum=self.max_momentum)
 
     # our params
+    self.last_epoch = -1  # fix for pytorch 1.1 and below
     self.oneshot_n = self.step_size_up + self.step_size_down   # steps to warm up for
     self.finished = False  # am i done
     super().__init__(optimizer)
