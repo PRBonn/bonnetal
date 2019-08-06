@@ -1,9 +1,6 @@
 #!/usr/bin/env python3
 # This file is covered by the LICENSE file in the root of this project.
 
-import torch
-import torch.nn as nn
-import torch.backends.cudnn as cudnn
 import imp
 import yaml
 import time
@@ -12,9 +9,6 @@ import cv2
 import os
 import numpy as np
 
-from backbones.config import *
-from tasks.classification.modules.head import *
-from tasks.classification.modules.classifier import *
 from common.trtCalibINT8 import EntropyCalibrator
 
 
