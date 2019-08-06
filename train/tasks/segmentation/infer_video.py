@@ -140,6 +140,11 @@ if __name__ == '__main__':
       print(e)
       print("Error creating log directory. Check permissions!")
       quit()
+  else:
+    # check that if log is None, at least I'm verbose:
+    if not FLAGS.verbose:
+      print("Program needs to either save to log, or be verbose, otherwise I'm just wasting electricity")
+      quit()
 
   # does model folder exist?
   if FLAGS.path is not None:
