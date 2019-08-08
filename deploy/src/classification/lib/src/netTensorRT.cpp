@@ -235,12 +235,14 @@ void NetTensorRT::deserializeEngine(const std::string& engine_path) {
       NV_TENSORRT_PATCH == 0)
   if (DEVICE_DLA_0) {
     infer->setDLACore(0);
-  }
-  if (DEVICE_DLA_1) {
+    std::cout << "Successfully selected DLA core 0." << std::endl;
+  } else if (DEVICE_DLA_1) {
     infer->setDLACore(1);
+    std::cout << "Successfully selected DLA core 1." << std::endl;
+  } else {
+    std::cout << "No DLA selected." << std::endl;
   }
 #endif
-  std::cout << "Successfully selected DLA core." << std::endl;
 
   // read file
   gieModelStream << file_ifstream.rdbuf();
@@ -326,6 +328,25 @@ void NetTensorRT::generateEngine(const std::string& onnx_path) {
   std::cout << "fp16 support." << std::endl;
   // BATCH SIZE IS ALWAYS ONE
   builder->setMaxBatchSize(1);
+
+// if using DLA, set the desired core before deserialization occurs
+#if NV_TENSORRT_MAJOR >= 5 &&                             \
+    !(NV_TENSORRT_MAJOR == 5 && NV_TENSORRT_MINOR == 0 && \
+      NV_TENSORRT_PATCH == 0)
+  if (DEVICE_DLA_0 || DEVICE_DLA_1) {
+    builder->setDefaultDeviceType(DeviceType::kDLA);
+    builder->allowGPUFallback(true);
+    if (DEVICE_DLA_0) {
+      std::cout << "Successfully selected DLA core 0." << std::endl;
+      builder->setDLACore(0);
+    } else if (DEVICE_DLA_0) {
+      std::cout << "Successfully selected DLA core 1." << std::endl;
+      builder->setDLACore(1);
+    }
+  } else {
+    std::cout << "No DLA selected." << std::endl;
+  }
+#endif
 
   // create a network builder
   INetworkDefinition* network = builder->createNetwork();
