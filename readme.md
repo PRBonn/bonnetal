@@ -98,7 +98,7 @@ These are the currently trained models we have:
 
 
 - Semantic Segmentation:
-  - Persons (super fast):
+  - Persons (super fast, [jetson benchmark](train/tasks/segmentation/jetsonbenchmark.md)):
     - [ERFNet - VGA](http://ipb.uni-bonn.de/html/projects/bonnetal/segmentation/persons-erfnet-512-88.tar.gz)
     - [MobilenetsV2 ASPP - VGA](http://ipb.uni-bonn.de/html/projects/bonnetal/segmentation/persons-mobilenetsv2-aspp-512-88.tar.gz)
     - [MobilenetsV2 ASPP Res - VGA](http://ipb.uni-bonn.de/html/projects/bonnetal/segmentation/persons-mobilenetsv2-aspp-res-512-88.tar.gz)
