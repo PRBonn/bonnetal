@@ -19,6 +19,9 @@ namespace classification {
  */
 NetTensorRT::NetTensorRT(const std::string& model_path)
     : Net(model_path), _engine(0), _context(0) {
+  // set default verbosity level
+  verbosity(_verbose);
+
   // Try to open the model
   std::cout << "Trying to open model" << std::endl;
 

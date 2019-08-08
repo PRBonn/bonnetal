@@ -20,6 +20,9 @@ namespace segmentation {
  */
 NetTensorRT::NetTensorRT(const std::string& model_path)
     : Net(model_path), _engine(0), _context(0) {
+  // set default verbosity level
+  verbosity(_verbose);
+
   // Try to open the model
   std::cout << "Trying to open model" << std::endl;
 
@@ -173,6 +176,9 @@ cv::Mat NetTensorRT::infer(const cv::Mat& image) {
  * @return     Exit code.
  */
 void NetTensorRT::verbosity(const bool verbose) {
+  std::cout << "Setting verbosity to: " << (verbose ? "true" : "false")
+            << std::endl;
+
   // call parent class verbosity
   this->Net::verbosity(verbose);
 

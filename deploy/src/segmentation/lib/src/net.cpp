@@ -19,7 +19,10 @@ namespace segmentation {
  * @param[in]  model_path  The model path for the inference model directory
  */
 Net::Net(const std::string& model_path)
-    : _model_path(model_path), _verbose(false) {
+    : _model_path(model_path), _verbose(true) {
+  // set default verbosity level
+  verbosity(_verbose);
+
   // Try to get the config file as well
   std::string cfg_path = _model_path + "/cfg.yaml";
   try {
