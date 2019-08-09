@@ -61,7 +61,7 @@ if __name__ == '__main__':
     if(FLAGS.cfg):
       print("Opening config file %s" % FLAGS.cfg)
       with open(FLAGS.cfg, 'r') as file:
-        CFG = yaml.load(file)
+        CFG = yaml.safe_load(file)
         FLAGS.numclasses = len(CFG["dataset"]["labels"])
   except Exception as e:
     print(e)

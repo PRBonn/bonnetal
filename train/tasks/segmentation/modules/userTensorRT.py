@@ -34,7 +34,7 @@ class UserTensorRT():
     try:
       yaml_path = self.path + "/cfg.yaml"
       print("Opening config file %s" % yaml_path)
-      self.CFG = yaml.load(open(yaml_path, 'r'))
+      self.CFG = yaml.safe_load(open(yaml_path, 'r'))
     except Exception as e:
       print(e)
       print("Error opening cfg.yaml file from trained model.")

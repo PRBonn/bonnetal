@@ -77,7 +77,7 @@ if __name__ == '__main__':
       print("Opening default data file cfg.yaml from log folder")
       f = open(FLAGS.path + '/cfg.yaml', 'r')
       configfile = FLAGS.path + '/cfg.yaml'
-    CFG = yaml.load(f)
+    CFG = yaml.safe_load(f)
   except Exception as e:
     print(e)
     print("Error opening yaml file.")

@@ -47,7 +47,7 @@ if __name__ == '__main__':
   try:
     print("Opening config file")
     with open('cfg.yaml', 'r') as file:
-      CFG = yaml.load(file)
+      CFG = yaml.safe_load(file)
   except Exception as e:
     print(e)
     print("Error opening yaml file.")
