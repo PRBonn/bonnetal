@@ -2,7 +2,7 @@
 
 # Semantic Segmentation
 
-People vs Background CNNs
+People vs Background CNNs. All numbers are frames-per-second (FPS). Higher is better :)
 
 
 <table class="tg">
@@ -56,7 +56,7 @@ People vs Background CNNs
 
 # Depth from ZED SDK
 
-Info about modes [HERE](https://www.stereolabs.com/docs/depth-sensing/advanced-settings/#depth-modes)
+Info about modes [HERE](https://www.stereolabs.com/docs/depth-sensing/advanced-settings/#depth-modes). All numbers are frames-per-second (FPS). Higher is better :)
 
 <table class="tg">
   <tr>
