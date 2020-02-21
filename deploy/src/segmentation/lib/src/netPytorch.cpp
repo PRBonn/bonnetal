@@ -8,6 +8,18 @@
 namespace bonnetal {
 namespace segmentation {
 
+void torch_jit_module_compat(const torch::jit::script::Module& src,
+                             std::shared_ptr<torch::jit::script::Module>& module) {
+  // Works for pytorch >= 1.2
+  *module = src;
+}
+
+void torch_jit_module_compat(const std::shared_ptr<torch::jit::script::Module>& src,
+                             std::shared_ptr<torch::jit::script::Module>& module) {
+  // Works for pytorch = 1.1
+  module = src;
+}
+
 /**
  * @brief      Constructs the object.
  *
@@ -18,11 +30,15 @@ NetPytorch::NetPytorch(const std::string& model_path) : Net(model_path) {
   // Try to open the model
   std::cout << "Trying to open model" << std::endl;
   try {
-    _module = torch::jit::load(_model_path + "/model.pytorch", torch::kCUDA);
+    torch_jit_module_compat(torch::jit::load(_model_path + "/model.pytorch",
+                                             torch::kCUDA),
+                            _module);
     _device = std::unique_ptr<torch::Device>(new torch::Device(torch::kCUDA));
   } catch (...) {
     std::cout << "Could not send model to GPU, using CPU" << std::endl;
-    _module = torch::jit::load(_model_path + "/model.pytorch", torch::kCPU);
+    torch_jit_module_compat(torch::jit::load(_model_path + "/model.pytorch",
+                                             torch::kCPU),
+                            _module);
     _device = std::unique_ptr<torch::Device>(new torch::Device(torch::kCPU));
   }
 
