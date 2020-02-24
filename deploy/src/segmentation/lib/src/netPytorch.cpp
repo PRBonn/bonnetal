@@ -9,7 +9,7 @@ namespace bonnetal {
 namespace segmentation {
 
 template <typename srcT>
-typename std::enable_if<std::is_copy_assignable<srcT>::value, void>::type
+typename std::enable_if<std::is_convertible<srcT, torch::jit::script::Module>::value, void>::type
   torch_jit_module_compat(srcT src,
                              std::shared_ptr<torch::jit::script::Module>& module) {
   // Works for pytorch >= 1.2
