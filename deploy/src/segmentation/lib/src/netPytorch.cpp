@@ -8,7 +8,9 @@
 namespace bonnetal {
 namespace segmentation {
 
-void torch_jit_module_compat(const torch::jit::script::Module& src,
+template <typename srcT>
+typename std::enable_if<std::is_convertible<srcT, torch::jit::script::Module>::value, void>::type
+  torch_jit_module_compat(srcT src,
                              std::shared_ptr<torch::jit::script::Module>& module) {
   // Works for pytorch >= 1.2
   *module = src;
