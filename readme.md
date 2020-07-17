@@ -40,11 +40,7 @@ The main reason for the "lack" of variety of backbones so far is that imagenet p
   
   - Full-image classification: [/train](train/tasks/classification), [/deploy](deploy/src/classification).
   - Semantic Segmentation: [/train](train/tasks/segmentation), [/deploy](deploy/src/segmentation).
-  - More coming...
-  <!-- - Instance Segmentation: [/train](train/tasks/instances), [/deploy](deploy/src/instances).
-  - Object Detection: [/train](train/tasks/detection), [/deploy](deploy/src/detection),
-  - CNN Keypoint/Feature Extraction: [/train](train/tasks/features), [/deploy](deploy/src/features).
-  - Counting: [/train](train/tasks/counting), [/deploy](deploy/src/counting). -->
+  - More coming (but patience, since development is now a bit stagnant)...
 
 The code is (like the original Bonnet) separated into a [training](train/) part developed in Python, using Pytorch, and a [deployment/inference](deploy/) part, which is fully written in C++, and contains the code to run on the robot, either using ROS or standalone.
 

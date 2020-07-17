@@ -13,10 +13,6 @@
 
 - [Full-image classification](tasks/classification).
 - [Semantic Segmentation](tasks/segmentation).
-- [Instance Segmentation](tasks/instances).
-- [Object Detection](tasks/detection).
-- [CNN Keypoint/Feature Extraction](tasks/features)
-- [Counting](tasks/counting)
 
 ---
 ## Dependencies

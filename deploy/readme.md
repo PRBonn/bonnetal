@@ -11,10 +11,6 @@
 
 - [Full-image classification](src/classification).
 - [Semantic Segmentation](src/segmentation).
-- [Instance Segmentation](src/instances).
-- [Object Detection](src/detection).
-- [CNN Keypoint/Feature Extraction](src/features)
-- [Counting](src/counting)
 
 ---
 ## Dependencies
