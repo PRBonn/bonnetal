@@ -45,7 +45,8 @@ RUN wget http://ipb.uni-bonn.de/html/projects/bonnetal/external/nv-tensorrt-repo
   dpkg -i nv-tensorrt-repo-ubuntu1804-cuda10.1-trt5.1.5.0-ga-20190427_1-1_amd64.deb && \
   rm nv-tensorrt-repo-ubuntu1804-cuda10.1-trt5.1.5.0-ga-20190427_1-1_amd64.deb && \
   apt-get update && \
-  apt install tensorrt python3-libnvinfer-dev -yqq
+  apt-get install -y --no-install-recommends libnvinfer5=5.1.5-1+cuda10.1 libnvinfer-dev=5.1.5-1+cuda10.1 && \
+  apt install tensorrt python3-libnvinfer=5.1.5-1+cuda10.1 python3-libnvinfer-dev=5.1.5-1+cuda10.1 -yqq
 
 
 # build pytorch from source and install in the system
